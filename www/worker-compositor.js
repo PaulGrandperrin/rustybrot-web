@@ -44,7 +44,7 @@ function compose(workerResultBuffer) {
             compositorResult[(y*size_x+x)*4+3] = 255;      // alpha
         }
     }
-    postMessage([compositorResultBuffer, max]);
+    postMessage([compositorResultBuffer, max], [compositorResultBuffer]);
 
 }
 

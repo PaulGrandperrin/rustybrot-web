@@ -43,7 +43,7 @@ function asmInitialized() {
 			workerResult[i] = moduleSharedArray[i];
 		}
 
-		postMessage([name, workerResultBuffer]);
+		postMessage([name, workerResultBuffer], [workerResultBuffer]);
 	}
 
 	Module._free(moduleSharedArray.byteOffset);

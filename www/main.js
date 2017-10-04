@@ -50,7 +50,7 @@ function setupWorkers() {
         const [name, workerResultBuffer] = event.data;
         console.log("received data from " + name);
 
-        worker_compositor.postMessage(['compose', workerResultBuffer]);
+        worker_compositor.postMessage(['compose', workerResultBuffer], [workerResultBuffer]);
     };
 
     for (const i in [...Array(ncore).keys()]) {
