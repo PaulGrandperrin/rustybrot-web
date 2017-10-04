@@ -98,7 +98,9 @@ inputMinimumIteration.addEventListener('input', function() {
     terminateWorkers();
     terminateCompositor();
     setupCompositor();
-    setupWorkers(inputMinimumIteration.value, inputMaximumIteration.value);
+    if (playing) {
+        setupWorkers(inputMinimumIteration.value, inputMaximumIteration.value);
+    }
 });
 
 inputMaximumIteration.addEventListener('input', function() {
@@ -106,16 +108,16 @@ inputMaximumIteration.addEventListener('input', function() {
     terminateWorkers();
     terminateCompositor();
     setupCompositor();
-    setupWorkers(inputMinimumIteration.value, inputMaximumIteration.value);
+    if (playing) {
+        setupWorkers(inputMinimumIteration.value, inputMaximumIteration.value);
+    }
 });
 
 buttonPlayPause.addEventListener('click', function() {
     let icon = buttonPlayPause.getElementsByTagName("span")[0];
     if (playing) {
         terminateWorkers();
-        terminateCompositor();
     } else {
-        setupCompositor();
         setupWorkers(inputMinimumIteration.value, inputMaximumIteration.value);
     }
     playing = !playing;
@@ -138,8 +140,8 @@ window.onload = function() {
         terminateWorkers();
         terminateCompositor();
         setupCanvas();
+        setupCompositor();
         if (playing) {
-            setupCompositor();
             setupWorkers(inputMinimumIteration.value, inputMaximumIteration.value);
         }
     };
