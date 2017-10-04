@@ -29,7 +29,7 @@ function setupCompositor() {
         ctx.putImageData(imageData, 0, 0);
         */
 
-        var imageData = new ImageData(compositorResult, size_x, size_y);
+        const imageData = new ImageData(compositorResult, size_x, size_y);
         ctx.putImageData(imageData, 0, 0);
 
     };
@@ -41,7 +41,7 @@ function setupCompositor() {
 
 }
 
-function setupWorkers() {
+function setupWorkers(minimumIteratiom, maximumIteration) {
     console.log("setting up workers");
     const size_x = canvas.clientWidth;
     const size_y = canvas.clientHeight;
@@ -56,7 +56,7 @@ function setupWorkers() {
     for (const i in [...Array(ncore).keys()]) {
         workers[i] = new Worker("worker-producer.js");
         workers[i].onmessage = receivedDataFromWorker;
-        workers[i].postMessage(["worker"+i, size_y, size_x]);
+        workers[i].postMessage(["worker"+i, size_y, size_x, minimumIteratiom, maximumIteration]);
     }
 
 }
@@ -89,10 +89,48 @@ function terminateWorkers() {
 
 let playing = true;
 
+let inputMinimumIteration = document.getElementById('input-minimum-iteration');
+let inputMaximumIteration = document.getElementById('input-maximum-iteration');
+let buttonPlayPause = document.getElementById('button-play-pause');
+
+inputMinimumIteration.addEventListener('input', function() {
+    setupCanvas();
+    terminateWorkers();
+    terminateCompositor();
+    setupCompositor();
+    setupWorkers(inputMinimumIteration.value, inputMaximumIteration.value);
+});
+
+inputMaximumIteration.addEventListener('input', function() {
+    setupCanvas();
+    terminateWorkers();
+    terminateCompositor();
+    setupCompositor();
+    setupWorkers(inputMinimumIteration.value, inputMaximumIteration.value);
+});
+
+buttonPlayPause.addEventListener('click', function() {
+    let icon = buttonPlayPause.getElementsByTagName("span")[0];
+    if (playing) {
+        terminateWorkers();
+        terminateCompositor();
+    } else {
+        setupCompositor();
+        setupWorkers(inputMinimumIteration.value, inputMaximumIteration.value);
+    }
+    playing = !playing;
+    if (playing) {
+        icon.innerText="pause";
+    } else {
+        icon.innerText="play_arrow";
+    }
+});
+
+
 window.onload = function() {
     setupCanvas();
     setupCompositor();
-    setupWorkers();
+    setupWorkers(inputMinimumIteration.value, inputMaximumIteration.value);
 
     window.onresize = function(event) {
         console.log("resize event");
@@ -102,27 +140,8 @@ window.onload = function() {
         setupCanvas();
         if (playing) {
             setupCompositor();
-            setupWorkers();
+            setupWorkers(inputMinimumIteration.value, inputMaximumIteration.value);
         }
     };
 
 }
-
-
-let buttonPlayPause = document.getElementById('button-play-pause');
-buttonPlayPause.addEventListener('click', function() {
-    let icon = buttonPlayPause.getElementsByTagName("span")[0];
-    if (playing) {
-        terminateWorkers();
-        terminateCompositor();
-    } else {
-        setupCompositor();
-        setupWorkers();
-    }
-    playing = !playing;
-    if (playing) {
-        icon.innerText="pause";
-    } else {
-        icon.innerText="play_arrow";
-    }
-});

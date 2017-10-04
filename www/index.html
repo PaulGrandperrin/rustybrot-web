@@ -55,14 +55,25 @@
                 <canvas id="canvas"></canvas>
             </td>
             <td id="menu-td">
+                <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
+                    <input type="number" id="input-minimum-iteration" class="mdc-textfield__input" value="1" min="1">
+                    <label class="mdc-textfield__label" for="input-minimum-iteration">Minimum iterations</label>
+                </div>
 
+                <br/>
+
+                <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
+                    <input type="number" id="input-maximum-iteration" class="mdc-textfield__input" value="1000" min="1">
+                    <label class="mdc-textfield__label" for="input-maximum-iteration">Maximum iterations</label>
+                </div>
+
+                <br/>
+                
                 <button id="button-play-pause" class="mdc-fab material-icons" aria-label="Play/Pause" data-mdc-auto-init="MDCRipple">
                   <span class="mdc-fab__icon">
                     pause
                   </span>
                 </button>
-
-
             </td> 
           </tr>
         </table>

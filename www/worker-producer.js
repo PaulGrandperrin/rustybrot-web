@@ -1,8 +1,10 @@
 "use strict";
 
-var name;
-var size_x;
-var size_y;
+let name;
+let size_x;
+let size_y;
+let minimumIteration;
+let maximumIteration;
 
 var Module = {
     'wasmBinaryFile': "rustybrot.wasm",
@@ -14,8 +16,8 @@ var Module = {
 
 function asmInitialized() {
 	console.log(name + ": asm initialized");
-	var pointer = Module._malloc(size_x*size_y*4); // allocate buffer in asm module heap
-	var moduleSharedArray = new Uint32Array(Module.HEAPU32.buffer, pointer, size_x*size_y); // create an array from this allocated memory
+	let pointer = Module._malloc(size_x*size_y*4); // allocate buffer in asm module heap
+	let moduleSharedArray = new Uint32Array(Module.HEAPU32.buffer, pointer, size_x*size_y); // create an array from this allocated memory
 
 	let get_buddhabrot = Module.cwrap('get_buddhabrot', 'number', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
 	
@@ -25,7 +27,7 @@ function asmInitialized() {
 
 	while(true) {
 		const t0 = performance.now();
-		get_buddhabrot(moduleSharedArray.byteOffset, size_x, size_y, -1.6, 0.8, -1.2, 1.2, 1, 1000000, num_sample);
+		get_buddhabrot(moduleSharedArray.byteOffset, size_x, size_y, -1.6, 0.8, -1.2, 1.2, minimumIteration, maximumIteration, num_sample);
 		//get_buddhabrot(moduleSharedArray.byteOffset, size_x, size_y, -0.5, 0.4, 0.4, 0.5, 1, 1000, num_sample);
 		//get_buddhabrot(moduleSharedArray.byteOffset, size_x, size_y, -0.043-zoom, -0.043+zoom, -0.986-zoom, -0.986+zoom, 1, 1000000, num_sample);
 
@@ -50,10 +52,9 @@ function asmInitialized() {
 }
 
 onmessage = function(event) {
-	name = event.data[0];
-	size_x = event.data[1];
-	size_y = event.data[2];
-	console.log(name + ": size=" + size_x + "x" + size_y);
+	[name, size_x, size_y, minimumIteration, maximumIteration] = event.data;
+
+	console.log(name + ": size=" + size_x + "x" + size_y + ", min_iter=" + minimumIteration + ", max_iter=" + maximumIteration);
 
 	importScripts('rustybrot.wasm.js');
 }
