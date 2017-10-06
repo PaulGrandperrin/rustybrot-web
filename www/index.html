@@ -3,81 +3,75 @@
     <head class="mdc-typography">
         <meta charset="utf-8">
         <title>Buddhabrot</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!--<link rel="icon" type="image/png" href="PLACEHOLDER.png">-->
-        <!--<link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">-->
-        <link rel="stylesheet" href="material-components-web.min.css">
+        <!--
+        -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no">
+        <!--<link rel="icon" type="image/png" href="PLACEHOLDER.png">-->
+        <!--<link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">-->
+        <link rel="stylesheet" href="material-components-web.min.css">
         <style type="text/css">
-            html, body, table, tr {
+            
+            /* MANDATORY BASIC SANITY RESTORATION */
+            html {
+                box-sizing: border-box;
+            }
+            *, *:before, *:after {
+                box-sizing: inherit;
+            }
+
+            body {
+                overflow-y: hidden;
+                display: grid;
+                grid-template-columns: minmax(calc(20vw - 20rem), auto) minmax(15rem, 20vw);
+                grid-template-rows: 100vh;
+                grid-column-gap: 0;
                 margin: 0;
-                padding: 0;
-                overflow: hidden;
-            }
-
-            html, body, table, tr {
-                height: 100%;
-                width: 100%;
-            }
-
-            table {
-                border: none;
-                border-spacing: 0;
-            }
-
-            #canvas-td {
-                width: 60%;
-                margin: 0;
-                padding: 0;
-            }
-
-            #menu-td {
-                width: 30%;
-                text-align: center;
             }
 
             #canvas {
                 width: 100%;
                 height: 100%;
-                margin: 0;
-                padding: 0;
             }
+
+            #menu {
+                background-color: white;
+                text-align: center;
+            }
+
 
         </style>
     </head>
     <body class="mdc-typography">
         
-        <table>
-          <tr>
-            <td id="canvas-td" class="mdc-elevation--z20">
-                <canvas id="canvas"></canvas>
-            </td>
-            <td id="menu-td">
-                <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
-                    <input type="number" id="input-minimum-iteration" class="mdc-textfield__input" value="1" min="1">
-                    <label class="mdc-textfield__label" for="input-minimum-iteration">Minimum iterations</label>
-                </div>
+        <div id="main">
+            <canvas id="canvas"></canvas>
+        </div>
 
-                <br/>
+        <div id="menu" class="mdc-elevation--z20">
+            <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
+                <input type="number" id="input-minimum-iteration" class="mdc-textfield__input" value="1" min="1">
+                <label class="mdc-textfield__label" for="input-minimum-iteration">Minimum iterations</label>
+            </div>
 
-                <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
-                    <input type="number" id="input-maximum-iteration" class="mdc-textfield__input" value="1000" min="1">
-                    <label class="mdc-textfield__label" for="input-maximum-iteration">Maximum iterations</label>
-                </div>
+            <br/>
 
-                <br/>
-                
-                <button id="button-play-pause" class="mdc-fab material-icons" aria-label="Play/Pause" data-mdc-auto-init="MDCRipple">
-                  <span class="mdc-fab__icon">
-                    pause
-                  </span>
-                </button>
-            </td> 
-          </tr>
-        </table>
+            <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
+                <input type="number" id="input-maximum-iteration" class="mdc-textfield__input" value="1000" min="1">
+                <label class="mdc-textfield__label" for="input-maximum-iteration">Maximum iterations</label>
+            </div>
 
+            <br/>
+            
+            <button id="button-play-pause" class="mdc-fab material-icons" aria-label="Play/Pause" data-mdc-auto-init="MDCRipple">
+              <span class="mdc-fab__icon">
+                pause
+              </span>
+            </button>
+        </div>
+ 
         <!--<script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>-->
         <script src="material-components-web.min.js"></script>
         <script type="text/javascript">
