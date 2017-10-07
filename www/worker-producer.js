@@ -16,10 +16,11 @@ var Module = {
 };
 
 function asmInitialized() {
-	let pointer = Module._malloc(size_x*size_y*2); // allocate buffer in asm module heap
-	let moduleSharedArray = new Uint16Array(Module.HEAPU16.buffer, pointer, size_x*size_y); // create an array from this allocated memory
+	let pointer = Module._malloc(size_x*size_y*2*3); // allocate buffer in asm module heap
+	let moduleSharedArray = new Uint16Array(Module.HEAPU16.buffer, pointer, size_x*size_y*3); // create an array from this allocated memory
 
 	let get_buddhabrot;
+	/*
 	if (view.x_min < -1.0 && view.x_max > 0.5 && view.y_min < -0.5 && view.y_max > 0.5) {
 		get_buddhabrot = Module.cwrap('get_buddhabrot', 'number', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
 		console.log(name + ": asm initialized using standard MCMC");
@@ -27,6 +28,8 @@ function asmInitialized() {
 		get_buddhabrot = Module.cwrap('get_buddhabrot_metropolis', 'number', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
 		console.log(name + ": asm initialized using Metropolis-Hasting MCMC");
 	}
+	*/
+	get_buddhabrot = Module.cwrap('get_buddhabrot_metropolis_color', 'number', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
 
 	let num_sample = 1000;
 	const duration_goal = 4000;
@@ -34,7 +37,7 @@ function asmInitialized() {
 
 	while(true) {
 		const t0 = performance.now();
-		get_buddhabrot(moduleSharedArray.byteOffset, size_x, size_y, view.x_min, view.x_max, view.y_min, view.y_max, minimumIteration, maximumIteration, num_sample);
+		get_buddhabrot(moduleSharedArray.byteOffset, size_x, size_y, view.x_min, view.x_max, view.y_min, view.y_max, 1, 5000, 1, 500, 1, 50, num_sample);
 		//get_buddhabrot(moduleSharedArray.byteOffset, size_x, size_y, -0.5, 0.4, 0.4, 0.5, 1, 1000, num_sample);
 		//get_buddhabrot(moduleSharedArray.byteOffset, size_x, size_y, -0.043-zoom, -0.043+zoom, -0.986-zoom, -0.986+zoom, 1, 1000000, num_sample);
 
@@ -46,7 +49,7 @@ function asmInitialized() {
 		console.log("adjuting num_sample to " + num_sample);
 
 
-		const workerResultBuffer = new ArrayBuffer(size_x*size_y*2);
+		const workerResultBuffer = new ArrayBuffer(size_x*size_y*2*3);
 		const workerResult = new Uint16Array(workerResultBuffer);
 		for (let i = 0; i < moduleSharedArray.length; i++) {
 			workerResult[i] = moduleSharedArray[i];

@@ -56,7 +56,7 @@ pub fn get_buddhabrot_metropolis(array:*mut u16, size_x: usize, size_y: usize, x
 #[no_mangle]
 pub fn get_buddhabrot_metropolis_color(array:*mut u16, size_x: usize, size_y: usize, x_min:f64, x_max:f64, y_min:f64, y_max:f64, red_min_iteration: u32, red_max_iteration: u32, green_min_iteration: u32, green_max_iteration: u32, blue_min_iteration: u32, blue_max_iteration: u32, num_sample: u32) {
     let mut image = unsafe {
-        std::slice::from_raw_parts_mut(array, size_x*size_y)
+        std::slice::from_raw_parts_mut(array, size_x*size_y*3)
     };
 
     for i in image.iter_mut() {

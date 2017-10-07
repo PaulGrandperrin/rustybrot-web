@@ -36,7 +36,7 @@ function compose(workerResultBuffer) {
         return [red, green, blue]
     }
 
-    function intensity2greyscale(intensity, max) {
+    function intensityRegularization(intensity, max) {
         // compress
         intensity = Math.sqrt(intensity);
 
@@ -56,18 +56,16 @@ function compose(workerResultBuffer) {
         //intensity = intensity*intensity*intensity*(intensity*(intensity*6-15)+10);
 
 
-        const grey = intensity*256;
-        return [grey, grey, grey]
+        return intensity*256;
     }
 
     const compositorResultBuffer = new ArrayBuffer(size_x*size_y*4);
     const compositorResult = new Uint8ClampedArray(compositorResultBuffer);
     for (let y = 0; y < size_y; y++) {
         for(let x = 0; x < size_x; x++) {
-            const color = intensity2greyscale(cumulatedResult[x*size_y+y], max);
-            compositorResult[(y*size_x+x)*4+0] = color[0]; // red
-            compositorResult[(y*size_x+x)*4+1] = color[1]; // green
-            compositorResult[(y*size_x+x)*4+2] = color[2]; // blue
+            compositorResult[(y*size_x+x)*4+0] = intensityRegularization(cumulatedResult[(x*size_y+y)*3+0]); // red
+            compositorResult[(y*size_x+x)*4+1] = intensityRegularization(cumulatedResult[(x*size_y+y)*3+1]); // green
+            compositorResult[(y*size_x+x)*4+2] = intensityRegularization(cumulatedResult[(x*size_y+y)*3+2]); // blue
             compositorResult[(y*size_x+x)*4+3] = 255;      // alpha
         }
     }
@@ -79,7 +77,7 @@ function init(s_x, s_y) {
     size_x = s_x;
     size_y = s_y;
 	console.log("initializing compositor with values: "+size_x+"x"+size_y);
-	cumulatedResult = new Uint16Array(size_x*size_y);
+	cumulatedResult = new Uint16Array(size_x*size_y*3);
     cumulatedResult.fill(0);
 }
 
