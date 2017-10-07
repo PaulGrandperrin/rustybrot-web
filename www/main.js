@@ -21,7 +21,10 @@ const workers = [];
 let playing = true;
 let selection_rect = document.getElementById('selection-rect');
 const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
+const canvas_ctx = canvas.getContext('2d');
+let inputMinimumIteration = document.getElementById('input-minimum-iteration');
+let inputMaximumIteration = document.getElementById('input-maximum-iteration');
+let buttonPlayPause = document.getElementById('button-play-pause');
 
 function fit_to_ratio(ratio, i) {
     let view_ratio = (i.x_max - i.x_min) / (i.y_max - i.y_min);
