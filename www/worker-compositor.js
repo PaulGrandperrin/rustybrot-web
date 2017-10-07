@@ -49,9 +49,11 @@ function compose(workerResultBuffer) {
         // scale
         intensity = intensity / ndyn_range;
 
+        // smoothstep
+        intensity = intensity*intensity*(3-intensity*2);
+
         // smootherstep
         //intensity = intensity*intensity*intensity*(intensity*(intensity*6-15)+10);
-        intensity = intensity*intensity*(3-intensity*2);
 
 
         const grey = intensity*256;
