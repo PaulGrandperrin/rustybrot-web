@@ -9,15 +9,24 @@ function compose(workerResultBuffer) {
     
     const workerResult = new Uint32Array(workerResultBuffer);
 
+    let min = Number.MAX_SAFE_INTEGER;
     let max = 0;
     for (let i = 0; i < workerResult.length; i++) {
-      const n = cumulatedResult[i] + workerResult[i];
-      cumulatedResult[i] = n;
-      if (n > max) {max = n}
+        const n = cumulatedResult[i] + workerResult[i];
+        cumulatedResult[i] = n;
+        if (n > max) {max = n}
+        if (n < min) {min = n}
     }
+    max = Math.sqrt(max);
+    min = Math.sqrt(min);
+    const dyn_range = max - min; 
+    const nmax = max - dyn_range * 0.3;
+    const nmin = min + dyn_range * 0.1;
+    const ndyn_range = nmax - nmin;
 
     //max = Math.sqrt(max);
     console.log("max value: " + max)
+
 
     function intensity2rainbow(intensity, max) {
         const norm = Math.min(1, intensity * 3 / max) * 2 * Math.PI;
@@ -28,8 +37,24 @@ function compose(workerResultBuffer) {
     }
 
     function intensity2greyscale(intensity, max) {
-        // use square or cubic and smoothstep
-        const grey = Math.min(255,(3*intensity/max*256));
+        // compress
+        intensity = Math.sqrt(intensity);
+
+        // saturate
+        intensity = Math.max(Math.min(intensity, nmax), nmin);
+
+        // calibrate
+        intensity = intensity - nmin;
+
+        // scale
+        intensity = intensity / ndyn_range;
+
+        // smootherstep
+        //intensity = intensity*intensity*intensity*(intensity*(intensity*6-15)+10);
+        intensity = intensity*intensity*(3-intensity*2);
+
+
+        const grey = intensity*256;
         return [grey, grey, grey]
     }
 
