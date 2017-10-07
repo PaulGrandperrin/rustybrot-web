@@ -76,7 +76,7 @@ function compose(workerResultBuffer) {
 function init(s_x, s_y) {
     size_x = s_x;
     size_y = s_y;
-	console.log("iniializing compositor with values: "+size_x+"x"+size_y);
+	console.log("initializing compositor with values: "+size_x+"x"+size_y);
 	cumulatedResult = new Uint32Array(size_x*size_y);
     cumulatedResult.fill(0);
 }
