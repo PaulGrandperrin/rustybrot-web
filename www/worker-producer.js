@@ -16,8 +16,8 @@ var Module = {
 };
 
 function asmInitialized() {
-	let pointer = Module._malloc(size_x*size_y*4); // allocate buffer in asm module heap
-	let moduleSharedArray = new Uint32Array(Module.HEAPU32.buffer, pointer, size_x*size_y); // create an array from this allocated memory
+	let pointer = Module._malloc(size_x*size_y*2); // allocate buffer in asm module heap
+	let moduleSharedArray = new Uint16Array(Module.HEAPU16.buffer, pointer, size_x*size_y); // create an array from this allocated memory
 
 	let get_buddhabrot;
 	if (view.x_min < -1.0 && view.x_max > 0.5 && view.y_min < -0.5 && view.y_max > 0.5) {
@@ -46,8 +46,8 @@ function asmInitialized() {
 		console.log("adjuting num_sample to " + num_sample);
 
 
-		const workerResultBuffer = new ArrayBuffer(size_x*size_y*4);
-		const workerResult = new Uint32Array(workerResultBuffer);
+		const workerResultBuffer = new ArrayBuffer(size_x*size_y*2);
+		const workerResult = new Uint16Array(workerResultBuffer);
 		for (let i = 0; i < moduleSharedArray.length; i++) {
 			workerResult[i] = moduleSharedArray[i];
 		}

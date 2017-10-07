@@ -10,7 +10,7 @@ extern crate rustybrot_lib;
 use rustybrot_lib::*;
 
 #[no_mangle]
-pub fn get_buddhabrot(array:*mut u32, size_x: usize, size_y: usize, x_min:f32, x_max:f32, y_min:f32, y_max:f32, min_iteration:u32, max_iteration: u32, num_sample: u32) -> u32 {
+pub fn get_buddhabrot(array:*mut u16, size_x: usize, size_y: usize, x_min:f32, x_max:f32, y_min:f32, y_max:f32, min_iteration:u32, max_iteration: u32, num_sample: u32) -> u16 {
 	let mut image = unsafe {
         std::slice::from_raw_parts_mut(array, size_x*size_y)
     };
@@ -32,7 +32,7 @@ pub fn get_buddhabrot(array:*mut u32, size_x: usize, size_y: usize, x_min:f32, x
 }
 
 #[no_mangle]
-pub fn get_buddhabrot_metropolis(array:*mut u32, size_x: usize, size_y: usize, x_min:f64, x_max:f64, y_min:f64, y_max:f64, min_iteration:u32, max_iteration: u32, num_sample: u32) -> u32 {
+pub fn get_buddhabrot_metropolis(array:*mut u16, size_x: usize, size_y: usize, x_min:f64, x_max:f64, y_min:f64, y_max:f64, min_iteration:u32, max_iteration: u32, num_sample: u32) -> u16 {
     let mut image = unsafe {
         std::slice::from_raw_parts_mut(array, size_x*size_y)
     };
