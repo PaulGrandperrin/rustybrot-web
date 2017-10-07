@@ -51,9 +51,13 @@
                 }
             }
 
-                #menu {
-                    background-color: yellow;
-                }
+            #selection-rect {
+                background-color: rgba(255,255,255,0.2);
+                color: rgba(0,0,0,0.6);
+                border: 2px dashed;
+                position: fixed;
+                display: none;
+                cursor: crosshair;
             }
 
         </style>
@@ -62,6 +66,7 @@
         
         <div id="main">
             <canvas id="canvas"></canvas>
+            <div id="selection-rect"></div>
         </div>
 
         <div id="menu" class="mdc-elevation--z20">

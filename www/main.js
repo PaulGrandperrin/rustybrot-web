@@ -166,6 +166,81 @@ buttonPlayPause.addEventListener('click', function() {
 });
 
 
+function getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+      x: evt.clientX - rect.left,
+      y: evt.clientY - rect.top
+    };
+}
+
+let selecting = false;
+let selection_first_pos = [0, 0];
+
+canvas.addEventListener('mousedown', function(evt) {
+    var mousePos = getMousePos(canvas, evt);
+    selecting = true;
+    selection_rect.style.display = "block";
+    selection_rect.style.left = mousePos.x+"px";
+    selection_rect.style.top = mousePos.y+"px";
+    selection_rect.style.width = "0px";
+    selection_rect.style.height = "0px";
+    selection_first_pos = {x:mousePos.x, y:mousePos.y};
+
+}, false);
+
+document.addEventListener('mousemove', function(evt) {
+    if (selecting) {
+        var mousePos = getMousePos(canvas, evt);
+        selection_rect.style.left = Math.min(mousePos.x, selection_first_pos.x)+"px";
+        selection_rect.style.top = Math.min(mousePos.y, selection_first_pos.y)+"px";
+        selection_rect.style.width = Math.min(Math.max(mousePos.x, selection_first_pos.x), canvas.width)-Math.min(mousePos.x, selection_first_pos.x)+"px";
+        selection_rect.style.height = Math.min(Math.max(mousePos.y, selection_first_pos.y), canvas.height)-Math.min(mousePos.y, selection_first_pos.y)+"px";
+    }
+}, false);
+
+document.addEventListener('mouseup', function(evt) {
+    
+    if (selecting) {
+        selection_rect.style.display = "none";
+        var mousePos = getMousePos(canvas, evt);
+
+        console.log("focus: ", focus);
+        view = fit_to_ratio(canvas.height/canvas.width, focus);
+        console.log("view: ", view);
+
+        const sy_min = Math.min(mousePos.x, selection_first_pos.x);
+        const sy_max = Math.min(Math.max(mousePos.x, selection_first_pos.x), canvas.width);
+        const sx_min = Math.min(mousePos.y, selection_first_pos.y);
+        const sx_max = Math.min(Math.max(mousePos.y, selection_first_pos.y), canvas.height);
+
+        const nx_min = (sx_min / canvas.height) * (view.x_max - view.x_min) + view.x_min;
+        const nx_max = (sx_max / canvas.height) * (view.x_max - view.x_min) + view.x_min;
+
+        const ny_min = (sy_min / canvas.width) * (view.y_max - view.y_min) + view.y_min;
+        const ny_max = (sy_max / canvas.width) * (view.y_max - view.y_min) + view.y_min;
+        
+        focus.x_min = nx_min;
+        focus.x_max = nx_max;
+        focus.y_min = ny_min;
+        focus.y_max = ny_max;
+
+        console.log("new focus: ", focus);
+
+
+        terminateWorkers();
+        terminateCompositor();
+        setupCanvas();
+        setupCompositor();
+        if (playing) {
+            setupWorkers(inputMinimumIteration.value, inputMaximumIteration.value);
+        }
+
+        selecting = false;
+    }
+    
+}, false);
+
 window.onload = function() {
     setupCanvas();
     setupCompositor();
