@@ -189,6 +189,8 @@ canvas.addEventListener('mousedown', function(evt) {
     selection_rect.style.width = "0px";
     selection_rect.style.height = "0px";
     selection_first_pos = {x:mousePos.x, y:mousePos.y};
+    selection_rect.style.cursor = "crosshair";
+    canvas.style.cursor = "crosshair";
 
 }, false);
 
@@ -207,26 +209,36 @@ document.addEventListener('mouseup', function(evt) {
     if (selecting) {
         selection_rect.style.display = "none";
         var mousePos = getMousePos(canvas, evt);
-
-        console.log("focus: ", focus);
         view = fit_to_ratio(canvas.height/canvas.width, focus);
-        console.log("view: ", view);
 
-        const sy_min = Math.min(mousePos.x, selection_first_pos.x);
-        const sy_max = Math.min(Math.max(mousePos.x, selection_first_pos.x), canvas.width);
-        const sx_min = Math.min(mousePos.y, selection_first_pos.y);
-        const sx_max = Math.min(Math.max(mousePos.y, selection_first_pos.y), canvas.height);
+        if (mousePos.x == selection_first_pos.x && mousePos.y == selection_first_pos.y) {
+            const mx = (mousePos.y / canvas.height) * (view.x_max - view.x_min) + view.x_min;
+            const my = (mousePos.x / canvas.width) * (view.y_max - view.y_min) + view.y_min;
+            focus = {
+                x_min: mx - (focus.x_max - focus.x_min)/4.0,
+                x_max: mx + (focus.x_max - focus.x_min)/4.0,
+                y_min: my - (focus.y_max - focus.y_min)/4.0,
+                y_max: my + (focus.y_max - focus.y_min)/4.0
+            }
 
-        const nx_min = (sx_min / canvas.height) * (view.x_max - view.x_min) + view.x_min;
-        const nx_max = (sx_max / canvas.height) * (view.x_max - view.x_min) + view.x_min;
+        } else {
+            const sy_min = Math.min(mousePos.x, selection_first_pos.x);
+            const sy_max = Math.min(Math.max(mousePos.x, selection_first_pos.x), canvas.width);
+            const sx_min = Math.min(mousePos.y, selection_first_pos.y);
+            const sx_max = Math.min(Math.max(mousePos.y, selection_first_pos.y), canvas.height);
 
-        const ny_min = (sy_min / canvas.width) * (view.y_max - view.y_min) + view.y_min;
-        const ny_max = (sy_max / canvas.width) * (view.y_max - view.y_min) + view.y_min;
-        
-        focus.x_min = nx_min;
-        focus.x_max = nx_max;
-        focus.y_min = ny_min;
-        focus.y_max = ny_max;
+            const nx_min = (sx_min / canvas.height) * (view.x_max - view.x_min) + view.x_min;
+            const nx_max = (sx_max / canvas.height) * (view.x_max - view.x_min) + view.x_min;
+
+            const ny_min = (sy_min / canvas.width) * (view.y_max - view.y_min) + view.y_min;
+            const ny_max = (sy_max / canvas.width) * (view.y_max - view.y_min) + view.y_min;
+            
+            focus.x_min = nx_min;
+            focus.x_max = nx_max;
+            focus.y_min = ny_min;
+            focus.y_max = ny_max;
+        }
+
 
         console.log("new focus: ", focus);
 
@@ -240,6 +252,8 @@ document.addEventListener('mouseup', function(evt) {
         }
 
         selecting = false;
+        selection_rect.style.cursor = "zoom-in";
+        canvas.style.cursor = "zoom-in";
     }
     
 }, false);
