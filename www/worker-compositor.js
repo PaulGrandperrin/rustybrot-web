@@ -20,8 +20,8 @@ function compose(workerResultBuffer) {
     max = Math.sqrt(max);
     min = Math.sqrt(min);
     const dyn_range = max - min; 
-    const nmax = max - dyn_range * 0.3;
-    const nmin = min + dyn_range * 0.1;
+    const nmax = max - dyn_range * 0.4;
+    const nmin = min + dyn_range * 0.01;
     const ndyn_range = nmax - nmin;
 
     //max = Math.sqrt(max);
@@ -50,10 +50,10 @@ function compose(workerResultBuffer) {
         intensity = intensity / ndyn_range;
 
         // smoothstep
-        intensity = intensity*intensity*(3-intensity*2);
+        //intensity = intensity*intensity*(3-intensity*2);
 
         // smootherstep
-        //intensity = intensity*intensity*intensity*(intensity*(intensity*6-15)+10);
+        intensity = intensity*intensity*intensity*(intensity*(intensity*6-15)+10);
 
 
         return intensity*256;
