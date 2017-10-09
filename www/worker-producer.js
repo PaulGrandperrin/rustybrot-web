@@ -40,12 +40,12 @@ function asmInitialized() {
 	
 
 	let num_sample = 10000;
-	const duration_goal = 4000;
+	const duration_goal = 5000;
 	const zoom = 0.005;
 
 	while(true) {
 		const t0 = performance.now();
-		get_buddhabrot(moduleSharedArray.byteOffset, size_x, size_y, view.x_min, view.x_max, view.y_min, view.y_max, 1, 5000, 1, 500, 1, 50, num_sample);
+		get_buddhabrot(moduleSharedArray.byteOffset, size_x, size_y, view.x_min, view.x_max, view.y_min, view.y_max, minimumIteration, maximumIteration, minimumIteration/10, maximumIteration/10, minimumIteration/100, maximumIteration/100, num_sample);
 		//get_buddhabrot(moduleSharedArray.byteOffset, size_x, size_y, -0.5, 0.4, 0.4, 0.5, 1, 1000, num_sample);
 		//get_buddhabrot(moduleSharedArray.byteOffset, size_x, size_y, -0.043-zoom, -0.043+zoom, -0.986-zoom, -0.986+zoom, 1, 1000000, num_sample);
 
