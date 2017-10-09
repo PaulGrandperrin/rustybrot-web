@@ -9,11 +9,19 @@ let view;
 
 var Module = {
     'wasmBinaryFile': "rustybrot.wasm",
+    'asmjsCodeFile': "rustybrot.asmjs.js",
+    'locateFile': myLocateFile,
     'print': function(text) { console.log(name + ' asm stdout: ' + text) },
     'printErr': function(text) { console.log(name + ' asm stderr: ' + text) },
     'onRuntimeInitialized': asmInitialized,
     'noInitialRun': true
 };
+
+
+function myLocateFile(url) {
+	console.log('emscripten loading: ', url);
+	return url;
+}
 
 function asmInitialized() {
 	let pointer = Module._malloc(size_x*size_y*2*3); // allocate buffer in asm module heap
@@ -66,5 +74,10 @@ onmessage = function(event) {
 
 	console.log(name + ": size=" + size_x + "x" + size_y + ", min_iter=" + minimumIteration + ", max_iter=" + maximumIteration + ", view=" + view);
 
-	importScripts('rustybrot.wasm.js');
+	if (typeof WebAssembly === "object") {
+        importScripts('rustybrot.wasm.js');
+	} else {
+		importScripts('rustybrot.asmjs.js');
+	}
+	
 }

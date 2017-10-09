@@ -275,4 +275,16 @@ window.onload = function() {
         }
     };
 
+    var MDCSnackbar = window.mdc.snackbar.MDCSnackbar;
+    const snackbar = new MDCSnackbar(document.querySelector('.mdc-snackbar'));
+    const dataObj = 
+        {
+          message: typeof WebAssembly === "object" ? "WebAssembly supported 😄" : "WebAssembly not supported, fallbacking to ASM.js",
+          actionText: 'Ok',
+          actionHandler: function () {},
+          timeout: 5000
+        };
+
+    snackbar.show(dataObj);
+
 }
