@@ -55,7 +55,7 @@ function setupCompositor() {
     
     const receivedDataFromCompositor = function(event) {
         console.log("received data from compositor");
-        const [compositorResultBuffer, max] = event.data;
+        const [compositorResultBuffer] = event.data;
         const compositorResult = new Uint8ClampedArray(compositorResultBuffer);
 
         /*
@@ -261,7 +261,7 @@ document.addEventListener('mouseup', function(evt) {
 window.onload = function() {
     setupCanvas();
     setupCompositor();
-    setupWorkers(inputMinimumIteration.value, inputMaximumIteration.value);
+    //setupWorkers(inputMinimumIteration.value, inputMaximumIteration.value);
 
     window.onresize = function(event) {
         console.log("resize event");
