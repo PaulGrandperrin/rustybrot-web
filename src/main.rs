@@ -1,11 +1,5 @@
 #![no_main]
 
-/*
-#![feature(link_args)]
-#[link_args = "-s EXPORTED_FUNCTIONS=['_hello_world']"]
-extern {}
-*/
-
 extern crate rustybrot_lib;
 use rustybrot_lib::*;
 
