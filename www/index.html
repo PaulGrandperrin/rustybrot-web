@@ -25,10 +25,44 @@
             body {
                 overflow-y: hidden;
                 display: grid;
-                grid-template-columns: minmax(calc(20vw - 20rem), auto) minmax(15rem, 20vw);
+                grid-template-columns: minmax(calc(20vw - 25rem), auto) minmax(20rem, 20vw);
                 grid-template-rows: 100vh;
                 grid-column-gap: 0;
                 margin: 0;
+            }
+
+            .menu-item {
+                margin:1rem;
+            }
+
+            .menu-item-iteration {
+                display: grid;
+                grid-template-columns:  1fr 1.5rem 1fr;
+                /*grid-template-rows: ;*/
+                grid-column-gap: 1rem;
+            }
+
+            .menu-item-switch {
+                display: grid;
+                grid-template-columns: 5fr 1fr 5fr;
+                /*grid-template-rows: ;*/
+                grid-column-gap: 1rem;
+                text-align: center;
+            }
+
+             .menu-item-stats {
+                display: grid;
+                grid-template-columns: auto auto;
+                /*grid-template-rows: ;*/
+                grid-column-gap: 2rem;
+            }
+
+            .menu-item-stats-metric {
+                text-align: right;
+            }
+
+            .menu-item-stats-value {
+                text-align: left;
             }
 
             #canvas {
@@ -39,6 +73,7 @@
             #menu {
                 background-color: white;
                 text-align: center;
+                overflow-y: auto;
             }
             
             @media (orientation: portrait){
@@ -67,6 +102,16 @@
                 background-color: white;
             }
 
+            #button-play-pause {
+                position: absolute;
+                right:30px;
+                bottom: 30px;
+            }
+
+            h3 {
+                margin-top: 2rem;
+            }
+
         </style>
 
         <!-- Global Site Tag (gtag.js) - Google Analytics -->
@@ -83,30 +128,104 @@
     <body class="mdc-typography">
         
         <div id="main">
-            <canvas id="canvas"></canvas>
             <div id="selection-rect"></div>
+            <canvas id="canvas"></canvas>
         </div>
 
+
         <div id="menu" class="mdc-elevation--z20">
-            <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
-                <input type="number" id="input-minimum-iteration" class="mdc-textfield__input" value="1" min="1">
-                <label class="mdc-textfield__label" for="input-minimum-iteration">Minimum iterations</label>
+            <h3 style="-webkit-margin-after: 0.5em;">Number of iterations per orbits</h3>
+            <div class="menu-item menu-item-iteration">
+                <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
+                    <input type="number" id="input-minimum-iteration" class="mdc-textfield__input" value="1" min="1">
+                    <label class="mdc-textfield__label" for="input-minimum-iteration">min</label>
+                </div>
+
+                <span class="mdc-elevation--z4" style="background-color: red;border-radius: 50%;  margin-top: 36px; height: 1.2rem; width: 1.2rem;"></span>
+
+                <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
+                    <input type="number" id="input-maximum-iteration" class="mdc-textfield__input" value="1000" min="1">
+                    <label class="mdc-textfield__label" for="input-maximum-iteration">max</label>
+                </div>
+
+                <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
+                    <input type="number" id="input-minimum-iteration" class="mdc-textfield__input" value="1" min="1">
+                    <label class="mdc-textfield__label" for="input-minimum-iteration">min</label>
+                </div>
+
+                <span class="mdc-elevation--z4" style="background-color: green;border-radius: 50%;  margin-top: 36px; height: 1.2rem; width: 1.2rem;"></span>
+
+                <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
+                    <input type="number" id="input-maximum-iteration" class="mdc-textfield__input" value="1000" min="1">
+                    <label class="mdc-textfield__label" for="input-maximum-iteration">max</label>
+                </div>
+
+                <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
+                    <input type="number" id="input-minimum-iteration" class="mdc-textfield__input" value="1" min="1">
+                    <label class="mdc-textfield__label" for="input-minimum-iteration">min</label>
+                </div>
+
+                <span class="mdc-elevation--z4" style="background-color: blue;border-radius: 50%;  margin-top: 36px; height: 1.2rem; width: 1.2rem;"></span>
+
+                <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
+                    <input type="number" id="input-maximum-iteration" class="mdc-textfield__input" value="1000" min="1">
+                    <label class="mdc-textfield__label" for="input-maximum-iteration">max</label>
+                </div>
             </div>
 
-            <br/>
+            <h3>Viewport coordinates</h3>
+            <div class="menu-item menu-item-iteration">
+                <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
+                    <input type="number" id="input-minimum-iteration" class="mdc-textfield__input" value="1" min="1">
+                    <label class="mdc-textfield__label" for="input-minimum-iteration">min</label>
+                </div>
 
-            <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
-                <input type="number" id="input-maximum-iteration" class="mdc-textfield__input" value="1000" min="1">
-                <label class="mdc-textfield__label" for="input-maximum-iteration">Maximum iterations</label>
+                <b style="margin-top: 36px;">Re</b>
+
+                <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
+                    <input type="number" id="input-maximum-iteration" class="mdc-textfield__input" value="1000" min="1">
+                    <label class="mdc-textfield__label" for="input-maximum-iteration">max</label>
+                </div>
+
+                <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
+                    <input type="number" id="input-minimum-iteration" class="mdc-textfield__input" value="1" min="1">
+                    <label class="mdc-textfield__label" for="input-minimum-iteration">min</label>
+                </div>
+
+                <b style="margin-top: 36px;">Im</b>
+
+                <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
+                    <input type="number" id="input-maximum-iteration" class="mdc-textfield__input" value="1000" min="1">
+                    <label class="mdc-textfield__label" for="input-maximum-iteration">max</label>
+                </div>
             </div>
 
-            <br/>
+            <h3>Execution engine</h3>
+            <div class="menu-item menu-item-switch">
+                <div>ASM.js</div>
+                <div class="mdc-switch">
+                  <input type="checkbox" id="basic-switch" class="mdc-switch__native-control" />
+                  <div class="mdc-switch__background">
+                    <div class="mdc-switch__knob"></div>
+                  </div>
+                </div>
+                <div>WebAssembly</div>
+            </div>
+
+            <p>using <b>8</b> web workers threads</p>
             
-            <button id="button-play-pause" class="mdc-fab material-icons" aria-label="Play/Pause" data-mdc-auto-init="MDCRipple">
-              <span class="mdc-fab__icon">
-                pause
-              </span>
-            </button>
+            
+
+            <h3>Stats</h3>
+            <div class="menu-item menu-item-stats">
+                <div class="menu-item-stats-metric">samples</div> <div class="menu-item-stats-value">999</div>
+                <div class="menu-item-stats-metric">orbits < min</div> <div class="menu-item-stats-value">999</div>
+                <div class="menu-item-stats-metric">orbits > max </div> <div class="menu-item-stats-value">999</div>
+                <div class="menu-item-stats-metric">orbits</div> <div class="menu-item-stats-value">999</div>
+                <div class="menu-item-stats-metric">points</div> <div class="menu-item-stats-value">999</div>
+                <div class="menu-item-stats-metric">points in screen</div> <div class="menu-item-stats-value">999</div>
+
+            </div>
         </div>
 
         <div class="mdc-snackbar mdc-theme--dark"
@@ -119,6 +238,14 @@
     <button type="button" class="mdc-snackbar__action-button"></button>
   </div>
 </div>
+
+    <button id="button-play-pause" class="mdc-fab material-icons" aria-label="Play/Pause" data-mdc-auto-init="MDCRipple">
+      <span class="mdc-fab__icon">
+        pause
+      </span>
+    </button>
+
+<a href="https://github.com/PaulGrandperrin/rustybrot-web"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/c6286ade715e9bea433b4705870de482a654f78a/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f77686974655f6666666666662e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_white_ffffff.png"></a>
  
         <!--<script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>-->
         <script src="material-components-web.min.js"></script>
