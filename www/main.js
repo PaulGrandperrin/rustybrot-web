@@ -26,6 +26,13 @@ let inputEngine = document.getElementById('input-engine');
 let inputAlgo = document.getElementById('input-algo');
 let buttonPlayPause = document.getElementById('button-play-pause');
 
+let statSamples = document.getElementById('stat-samples');
+let statOrbitsTooSmall = document.getElementById('stat-orbits-too-small');
+let statOrbitsTooBig = document.getElementById('stat-orbits-too-big');
+let statValidOrbits = document.getElementById('stat-valid-orbits');
+let statOrbitsPoints = document.getElementById('stat-orbits-points');
+let statOrbitsPointsOnScreen = document.getElementById('stat-orbits-points-on-screen');
+
 function fit_to_ratio(ratio, i) {
     let view_ratio = (i.x_max - i.x_min) / (i.y_max - i.y_min);
     let o = {};
@@ -86,8 +93,15 @@ function setupWorkers() {
     const size_y = canvas.clientHeight;
     
     const receivedDataFromWorker = function(event) {
-        const [name, workerResultBuffer] = event.data;
+        const [name, workerResultBuffer, stats] = event.data;
         console.log("received data from " + name);
+        console.log("STATS: ", stats);
+        statSamples.innerText = parseFloat(statSamples.innerText) + stats.samples;
+        statOrbitsTooSmall.innerText = parseFloat(statOrbitsTooSmall.innerText) + stats.orbits_too_small;
+        statOrbitsTooBig.innerText = parseFloat(statOrbitsTooBig.innerText) + stats.orbits_too_big;
+        statValidOrbits.innerText = parseFloat(statValidOrbits.innerText) + stats.valid_orbits;
+        statOrbitsPoints.innerText = parseFloat(statOrbitsPoints.innerText) + stats.orbits_points;
+        statOrbitsPointsOnScreen.innerText = parseFloat(statOrbitsPointsOnScreen.innerText) + stats.orbits_points_on_screen;
 
         worker_compositor.postMessage(['compose', workerResultBuffer], [workerResultBuffer]);
     };
@@ -144,16 +158,16 @@ function updateParametersAndAlgo() {
     } else {
         inputAlgo.checked = false;
     }
-    setupCanvas();
-    terminateWorkers();
-    terminateCompositor();
-    setupCompositor();
-    if (playing) {
-        setupWorkers();
-    }
+    updateParameters();
 }
 
 function updateParameters() {
+    statSamples.innerText = 0.0;
+    statOrbitsTooSmall.innerText = 0.0;
+    statOrbitsTooBig.innerText = 0.0;
+    statValidOrbits.innerText = 0.0;
+    statOrbitsPoints.innerText = 0.0;
+    statOrbitsPointsOnScreen.innerText = 0.0;
     setupCanvas();
     terminateWorkers();
     terminateCompositor();

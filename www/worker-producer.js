@@ -31,15 +31,15 @@ function myLocateFile(url) {
 function asmInitialized() {
 	let pointer = Module._malloc(size_x*size_y*2*3); // allocate buffer in asm module heap
 	let moduleSharedArray = new Uint16Array(Module.HEAPU16.buffer, pointer, size_x*size_y*3); // create an array from this allocated memory
+	pointer = Module._malloc(6*8); // allocate buffer in asm module heap
+	let statsArray = new Float64Array(Module.HEAPF64.buffer, pointer, 6); // create an array from this allocated memory
 
 	let get_buddhabrot;
-	console.log("VIEWPORT: ",view);
-	
 	if (algo) {
-		get_buddhabrot = Module.cwrap('get_buddhabrot_metropolis_color', 'number', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
+		get_buddhabrot = Module.cwrap('get_buddhabrot_metropolis_color', null, ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
 		console.log(name + ": asm initialized using Metropolis-Hasting MCMC");
 	} else {
-		get_buddhabrot = Module.cwrap('get_buddhabrot_color', 'number', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
+		get_buddhabrot = Module.cwrap('get_buddhabrot_color', null, ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
 		console.log(name + ": asm initialized using standard MCMC");
 	}
 
@@ -54,7 +54,7 @@ function asmInitialized() {
 			redMinimumIteration, redMaximumIteration,
 			greenMinimumIteration, greenMaximumIteration,
 			blueMinimumIteration, blueMaximumIteration,
-			num_sample);
+			num_sample, statsArray.byteOffset);
 		//get_buddhabrot(moduleSharedArray.byteOffset, size_x, size_y, -0.5, 0.4, 0.4, 0.5, 1, 1000, num_sample);
 		//get_buddhabrot(moduleSharedArray.byteOffset, size_x, size_y, -0.043-zoom, -0.043+zoom, -0.986-zoom, -0.986+zoom, 1, 1000000, num_sample);
 
@@ -65,6 +65,14 @@ function asmInitialized() {
 		num_sample = num_sample * duration_goal / duration;
 		console.log("adjuting num_sample to " + num_sample);
 
+		let stats = {
+			samples: statsArray[0],
+        	orbits_too_small: statsArray[1],
+        	orbits_too_big: statsArray[2],
+        	valid_orbits: statsArray[3],
+        	orbits_points: statsArray[4],
+        	orbits_points_on_screen:statsArray[5],
+		};
 
 		const workerResultBuffer = new ArrayBuffer(size_x*size_y*2*3);
 		const workerResult = new Uint16Array(workerResultBuffer);
@@ -72,7 +80,7 @@ function asmInitialized() {
 			workerResult[i] = moduleSharedArray[i];
 		}
 
-		postMessage([name, workerResultBuffer], [workerResultBuffer]);
+		postMessage([name, workerResultBuffer, stats], [workerResultBuffer]);
 	}
 
 	Module._free(moduleSharedArray.byteOffset);
