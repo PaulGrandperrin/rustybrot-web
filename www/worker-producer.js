@@ -3,8 +3,12 @@
 let name;
 let size_x;
 let size_y;
-let minimumIteration;
-let maximumIteration;
+let redMinimumIteration;
+let redMaximumIteration;
+let greenMinimumIteration;
+let greenMaximumIteration;
+let blueMinimumIteration;
+let blueMaximumIteration;
 let view;
 
 var Module = {
@@ -28,6 +32,7 @@ function asmInitialized() {
 	let moduleSharedArray = new Uint16Array(Module.HEAPU16.buffer, pointer, size_x*size_y*3); // create an array from this allocated memory
 
 	let get_buddhabrot;
+	console.log("VIEWPORT: ",view);
 	
 	if (view.x_min < -1.0 && view.x_max > 0.5 && view.y_min < -0.5 && view.y_max > 0.5) {
 		get_buddhabrot = Module.cwrap('get_buddhabrot_color', 'number', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
@@ -45,7 +50,11 @@ function asmInitialized() {
 
 	while(true) {
 		const t0 = performance.now();
-		get_buddhabrot(moduleSharedArray.byteOffset, size_x, size_y, view.x_min, view.x_max, view.y_min, view.y_max, minimumIteration, maximumIteration, minimumIteration/10, maximumIteration/10, minimumIteration/100, maximumIteration/100, num_sample);
+		get_buddhabrot(moduleSharedArray.byteOffset, size_x, size_y, view.x_min, view.x_max, view.y_min, view.y_max,
+			redMinimumIteration, redMaximumIteration,
+			greenMinimumIteration, greenMaximumIteration,
+			blueMinimumIteration, blueMaximumIteration,
+			num_sample);
 		//get_buddhabrot(moduleSharedArray.byteOffset, size_x, size_y, -0.5, 0.4, 0.4, 0.5, 1, 1000, num_sample);
 		//get_buddhabrot(moduleSharedArray.byteOffset, size_x, size_y, -0.043-zoom, -0.043+zoom, -0.986-zoom, -0.986+zoom, 1, 1000000, num_sample);
 
@@ -70,9 +79,12 @@ function asmInitialized() {
 }
 
 onmessage = function(event) {
-	[name, size_x, size_y, view, minimumIteration, maximumIteration] = event.data;
+	[name, size_x, size_y, view,
+			redMinimumIteration, redMaximumIteration,
+			greenMinimumIteration, greenMaximumIteration,
+			blueMinimumIteration, blueMaximumIteration] = event.data;
 
-	console.log(name + ": size=" + size_x + "x" + size_y + ", min_iter=" + minimumIteration + ", max_iter=" + maximumIteration + ", view=" + view);
+	console.log(name + ": size=" + size_x + "x" + size_y + ", view=" + view);
 
 	if (typeof WebAssembly === "object") {
         importScripts('rustybrot.wasm.js');

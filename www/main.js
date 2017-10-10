@@ -4,16 +4,6 @@ const ncore = navigator.hardwareConcurrency;
 //const ncore = 1;
 console.log("number of core available: " + ncore);
 
-
-
-
-let focus = {
-    x_min: -1.6,
-    x_max: 0.8,
-    y_min: -1.2,
-    y_max: 1.2
-};
-
 let view = {};
 
 let worker_compositor = null;
@@ -22,8 +12,16 @@ let playing = true;
 let selection_rect = document.getElementById('selection-rect');
 const canvas = document.getElementById('canvas');
 const canvas_ctx = canvas.getContext('2d');
-let inputMinimumIteration = document.getElementById('input-minimum-iteration');
-let inputMaximumIteration = document.getElementById('input-maximum-iteration');
+let inputRedMinimumIteration = document.getElementById('input-red-minimum-iteration');
+let inputRedMaximumIteration = document.getElementById('input-red-maximum-iteration');
+let inputGreenMinimumIteration = document.getElementById('input-green-minimum-iteration');
+let inputGreenMaximumIteration = document.getElementById('input-green-maximum-iteration');
+let inputBlueMinimumIteration = document.getElementById('input-blue-minimum-iteration');
+let inputBlueMaximumIteration = document.getElementById('input-blue-maximum-iteration');
+let inputReMin = document.getElementById('input-re-min');
+let inputReMax = document.getElementById('input-re-max');
+let inputImMin = document.getElementById('input-im-min');
+let inputImMax = document.getElementById('input-im-max');
 let buttonPlayPause = document.getElementById('button-play-pause');
 
 function fit_to_ratio(ratio, i) {
@@ -80,7 +78,7 @@ function setupCompositor() {
 
 }
 
-function setupWorkers(minimumIteratiom, maximumIteration) {
+function setupWorkers() {
     console.log("setting up workers");
     const size_x = canvas.clientWidth;
     const size_y = canvas.clientHeight;
@@ -95,8 +93,15 @@ function setupWorkers(minimumIteratiom, maximumIteration) {
     for (const i in [...Array(ncore).keys()]) {
         workers[i] = new Worker("worker-producer.js");
         workers[i].onmessage = receivedDataFromWorker;
-        view = fit_to_ratio(size_y/size_x, focus);
-        workers[i].postMessage(["worker"+i, size_y, size_x, view, minimumIteratiom, maximumIteration]);
+        view = fit_to_ratio(size_y/size_x, {x_min:parseFloat(inputReMin.value), x_max:parseFloat(inputReMax.value), y_min:parseFloat(inputImMin.value), y_max:parseFloat(inputImMax.value)});
+        workers[i].postMessage(["worker"+i, size_y, size_x, view, 
+            parseFloat(inputRedMinimumIteration.value),
+            parseFloat(inputRedMaximumIteration.value),
+            parseFloat(inputGreenMinimumIteration.value),
+            parseFloat(inputGreenMaximumIteration.value),
+            parseFloat(inputBlueMinimumIteration.value),
+            parseFloat(inputBlueMaximumIteration.value),
+            ]);
     }
 
 }
@@ -129,36 +134,35 @@ function terminateWorkers() {
 }
 
 
-
-
-
-
-inputMinimumIteration.addEventListener('input', function() {
+function updateParameters() {
     setupCanvas();
     terminateWorkers();
     terminateCompositor();
     setupCompositor();
     if (playing) {
-        setupWorkers(inputMinimumIteration.value, inputMaximumIteration.value);
+        setupWorkers();
     }
-});
+} 
 
-inputMaximumIteration.addEventListener('input', function() {
-    setupCanvas();
-    terminateWorkers();
-    terminateCompositor();
-    setupCompositor();
-    if (playing) {
-        setupWorkers(inputMinimumIteration.value, inputMaximumIteration.value);
-    }
-});
+
+inputRedMinimumIteration.addEventListener('input', updateParameters);
+inputRedMaximumIteration.addEventListener('input', updateParameters);
+inputGreenMinimumIteration.addEventListener('input', updateParameters);
+inputGreenMaximumIteration.addEventListener('input', updateParameters);
+inputBlueMinimumIteration.addEventListener('input', updateParameters);
+inputBlueMaximumIteration.addEventListener('input', updateParameters);
+inputReMin.addEventListener('input', updateParameters);
+inputReMax.addEventListener('input', updateParameters);
+inputImMin.addEventListener('input', updateParameters);
+inputImMax.addEventListener('input', updateParameters);
+
 
 buttonPlayPause.addEventListener('click', function() {
     let icon = buttonPlayPause.getElementsByTagName("span")[0];
     if (playing) {
         terminateWorkers();
     } else {
-        setupWorkers(inputMinimumIteration.value, inputMaximumIteration.value);
+        setupWorkers();
     }
     playing = !playing;
     if (playing) {
@@ -209,16 +213,16 @@ document.addEventListener('mouseup', function(evt) {
     if (selecting) {
         selection_rect.style.display = "none";
         var mousePos = getMousePos(canvas, evt);
-        view = fit_to_ratio(canvas.height/canvas.width, focus);
+        view = fit_to_ratio(canvas.height/canvas.width, {x_min:parseFloat(inputReMin.value), x_max:parseFloat(inputReMax.value), y_min:parseFloat(inputImMin.value), y_max:parseFloat(inputImMax.value)});
 
         if (mousePos.x == selection_first_pos.x && mousePos.y == selection_first_pos.y) {
             const mx = (mousePos.y / canvas.height) * (view.x_max - view.x_min) + view.x_min;
             const my = (mousePos.x / canvas.width) * (view.y_max - view.y_min) + view.y_min;
-            focus = {
-                x_min: mx - (focus.x_max - focus.x_min)/4.0,
-                x_max: mx + (focus.x_max - focus.x_min)/4.0,
-                y_min: my - (focus.y_max - focus.y_min)/4.0,
-                y_max: my + (focus.y_max - focus.y_min)/4.0
+            [inputReMin.value, inputReMax.value, inputImMin.value, inputImMax.value] = {
+                x_min: mx - (parseFloat(inputReMax.value) - parseFloat(inputReMin.value))/4.0,
+                x_max: mx + (parseFloat(inputReMax.value) - parseFloat(inputReMin.value))/4.0,
+                y_min: my - (parseFloat(inputImMax.value) - parseFloat(inputImMin.value))/4.0,
+                y_max: my + (parseFloat(inputImMax.value) - parseFloat(inputImMin.value))/4.0
             }
 
         } else {
@@ -233,14 +237,11 @@ document.addEventListener('mouseup', function(evt) {
             const ny_min = (sy_min / canvas.width) * (view.y_max - view.y_min) + view.y_min;
             const ny_max = (sy_max / canvas.width) * (view.y_max - view.y_min) + view.y_min;
             
-            focus.x_min = nx_min;
-            focus.x_max = nx_max;
-            focus.y_min = ny_min;
-            focus.y_max = ny_max;
+            inputReMin.value = nx_min.toString();
+            inputReMax.value = nx_max.toString();
+            inputImMin.value = ny_min.toString();
+            inputImMax.value = ny_max.toString();
         }
-
-
-        console.log("new focus: ", focus);
 
 
         terminateWorkers();
@@ -248,7 +249,7 @@ document.addEventListener('mouseup', function(evt) {
         setupCanvas();
         setupCompositor();
         if (playing) {
-            setupWorkers(inputMinimumIteration.value, inputMaximumIteration.value);
+            setupWorkers();
         }
 
         selecting = false;
@@ -261,7 +262,7 @@ document.addEventListener('mouseup', function(evt) {
 window.onload = function() {
     setupCanvas();
     setupCompositor();
-    setupWorkers(inputMinimumIteration.value, inputMaximumIteration.value);
+    setupWorkers();
 
     window.onresize = function(event) {
         console.log("resize event");
@@ -271,7 +272,7 @@ window.onload = function() {
         setupCanvas();
         setupCompositor();
         if (playing) {
-            setupWorkers(inputMinimumIteration.value, inputMaximumIteration.value);
+            setupWorkers();
         }
     };
 
