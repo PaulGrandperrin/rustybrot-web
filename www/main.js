@@ -172,7 +172,7 @@ function updateParameters(changeHistory = true) {
     statOrbitsPointsOnScreen.innerText = 0.0;
 
     if (changeHistory) {
-        history.pushState({}, "", `?re.min=${inputReMin.value}&re.max=${inputReMax.value}&im.min=${inputImMin.value}&im.max=${inputImMax.value}`);
+        history.pushState({}, "", `?red.min=${inputRedMinimumIteration.value}&red.max=${inputRedMaximumIteration.value}&green.min=${inputGreenMinimumIteration.value}&green.max=${inputGreenMaximumIteration.value}&blue.min=${inputBlueMinimumIteration.value}&blue.max=${inputBlueMaximumIteration.value}&re.min=${inputReMin.value}&re.max=${inputReMax.value}&im.min=${inputImMin.value}&im.max=${inputImMax.value}`);
     }
 
     setupCanvas();
@@ -300,6 +300,13 @@ function syncParamsFromURL() {
     inputReMax.value = searchParams.get("re.max") || 0.8;
     inputImMin.value = searchParams.get("im.min") || -1.2;
     inputImMax.value = searchParams.get("im.max") || 1.2;
+
+    inputRedMinimumIteration.value = searchParams.get("red.min") || 1;
+    inputRedMaximumIteration.value = searchParams.get("red.max") || 5000;
+    inputGreenMinimumIteration.value = searchParams.get("green.min") || 1;
+    inputGreenMaximumIteration.value = searchParams.get("green.max") || 500;
+    inputBlueMinimumIteration.value = searchParams.get("blue.min") || 1;
+    inputBlueMaximumIteration.value = searchParams.get("blue.max") || 50;
     updateParametersAndAlgo(false);
 }
 
