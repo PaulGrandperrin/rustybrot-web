@@ -79,14 +79,15 @@ function asmInitialized() {
 }
 
 onmessage = function(event) {
+	let wasm;
 	[name, size_x, size_y, view,
 			redMinimumIteration, redMaximumIteration,
 			greenMinimumIteration, greenMaximumIteration,
-			blueMinimumIteration, blueMaximumIteration] = event.data;
+			blueMinimumIteration, blueMaximumIteration, wasm] = event.data;
 
 	console.log(name + ": size=" + size_x + "x" + size_y + ", view=" + view);
 
-	if (typeof WebAssembly === "object") {
+	if (wasm) {
         importScripts('rustybrot.wasm.js');
 	} else {
 		importScripts('rustybrot.asmjs.js');

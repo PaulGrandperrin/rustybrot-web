@@ -22,6 +22,7 @@ let inputReMin = document.getElementById('input-re-min');
 let inputReMax = document.getElementById('input-re-max');
 let inputImMin = document.getElementById('input-im-min');
 let inputImMax = document.getElementById('input-im-max');
+let inputEngine = document.getElementById('input-engine');
 let buttonPlayPause = document.getElementById('button-play-pause');
 
 function fit_to_ratio(ratio, i) {
@@ -101,6 +102,7 @@ function setupWorkers() {
             parseFloat(inputGreenMaximumIteration.value),
             parseFloat(inputBlueMinimumIteration.value),
             parseFloat(inputBlueMaximumIteration.value),
+            inputEngine.checked
             ]);
     }
 
@@ -155,6 +157,7 @@ inputReMin.addEventListener('input', updateParameters);
 inputReMax.addEventListener('input', updateParameters);
 inputImMin.addEventListener('input', updateParameters);
 inputImMax.addEventListener('input', updateParameters);
+inputEngine.addEventListener('change', updateParameters);
 
 
 buttonPlayPause.addEventListener('click', function() {
@@ -275,6 +278,13 @@ window.onload = function() {
             setupWorkers();
         }
     };
+
+    if (typeof WebAssembly !== "object") {
+        inputEngine.disabled = true;
+        document.getElementById("webassembly").style.textDecoration= "line-through";
+    } else {
+        inputEngine.checked = true;
+    }
 
     var MDCSnackbar = window.mdc.snackbar.MDCSnackbar;
     const snackbar = new MDCSnackbar(document.querySelector('.mdc-snackbar'));
