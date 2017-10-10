@@ -139,8 +139,10 @@ function setupCanvas() {
 function terminateCompositor() {
     console.log("terminating compositor");
 
-    worker_compositor.terminate();
-    worker_compositor = null;
+    if (worker_compositor != null) {
+        worker_compositor.terminate();
+        worker_compositor = null;
+    }
 }
 
 function terminateWorkers() {
@@ -152,22 +154,27 @@ function terminateWorkers() {
 }
 
 
-function updateParametersAndAlgo() {
+function updateParametersAndAlgo(changeHistory = true) {
     if (Math.min(inputReMax.value - inputReMin.value, inputImMax.value - inputImMin.value) < 0.6 ) {
         inputAlgo.checked = true;
     } else {
         inputAlgo.checked = false;
     }
-    updateParameters();
+    updateParameters(changeHistory);
 }
 
-function updateParameters() {
+function updateParameters(changeHistory = true) {
     statSamples.innerText = 0.0;
     statOrbitsTooSmall.innerText = 0.0;
     statOrbitsTooBig.innerText = 0.0;
     statValidOrbits.innerText = 0.0;
     statOrbitsPoints.innerText = 0.0;
     statOrbitsPointsOnScreen.innerText = 0.0;
+
+    if (changeHistory) {
+        history.pushState({}, "", `?re.min=${inputReMin.value}&re.max=${inputReMax.value}&im.min=${inputImMin.value}&im.max=${inputImMax.value}`);
+    }
+
     setupCanvas();
     terminateWorkers();
     terminateCompositor();
@@ -287,10 +294,17 @@ document.addEventListener('mouseup', function(evt) {
     
 }, false);
 
+function syncParamsFromURL() {
+    const searchParams = new URLSearchParams(window.location.search);
+    inputReMin.value = searchParams.get("re.min") || -1.6;
+    inputReMax.value = searchParams.get("re.max") || 0.8;
+    inputImMin.value = searchParams.get("im.min") || -1.2;
+    inputImMax.value = searchParams.get("im.max") || 1.2;
+    updateParametersAndAlgo(false);
+}
+
 window.onload = function() {
-    setupCanvas();
-    setupCompositor();
-    setupWorkers();
+    syncParamsFromURL();
 
     window.onresize = function(event) {
         console.log("resize event");
@@ -324,3 +338,8 @@ window.onload = function() {
     snackbar.show(dataObj);
 
 }
+
+window.onpopstate = function(event) {
+    syncParamsFromURL();
+};
+
