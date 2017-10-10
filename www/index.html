@@ -32,7 +32,6 @@
             }
 
             .menu-item {
-                margin:1rem;
             }
 
             .menu-item-iteration {
@@ -74,6 +73,7 @@
                 background-color: white;
                 text-align: center;
                 overflow-y: auto;
+                padding: 20px;
             }
             
             @media (orientation: portrait){
@@ -108,9 +108,11 @@
                 bottom: 30px;
             }
 
-            h3 {
-                margin-top: 2rem;
+            .mdc-textfield--upgraded:not(.mdc-textfield--fullwidth):not(.mdc-textfield--box) {
+                margin: 0;
             }
+
+
 
         </style>
 
@@ -134,6 +136,17 @@
 
 
         <div id="menu" class="mdc-elevation--z20">
+
+            <h2>Buddhabrot explorer</h2>
+            <p style="margin-bottom: 0;">The code generating this <a href="https://en.wikipedia.org/wiki/Buddhabrot">buddhabrot</a> <a href="https://en.wikipedia.org/wiki/Fractal">fractal</a> is written in <a href="https://en.wikipedia.org/wiki/Rust_(programming_language)">Rust</a></p>
+
+            <a href="https://en.wikipedia.org/wiki/Rust_(programming_language)">
+            <img 
+                src="rust-logo-blk.svg" 
+                alt="triangle with all three sides equal"
+                height="50px"
+                width="50px" /></a>
+
             <h3 style="-webkit-margin-after: 0.5em;">Iterations per orbits</h3>
             <div class="menu-item menu-item-iteration">
                 <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
@@ -141,7 +154,7 @@
                     <label class="mdc-textfield__label" for="input-red-minimum-iteration">min</label>
                 </div>
 
-                <span class="mdc-elevation--z4" style="background-color: red;border-radius: 50%;  margin-top: 36px; height: 1.2rem; width: 1.2rem;"></span>
+                <span class="mdc-elevation--z4" style="background-color: red;border-radius: 50%;  margin-top: 1.3em; height: 1.2rem; width: 1.2rem;"></span>
 
                 <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
                     <input type="number" id="input-red-maximum-iteration" class="mdc-textfield__input" value="5000" min="1">
@@ -153,7 +166,7 @@
                     <label class="mdc-textfield__label" for="input-green-minimum-iteration">min</label>
                 </div>
 
-                <span class="mdc-elevation--z4" style="background-color: green;border-radius: 50%;  margin-top: 36px; height: 1.2rem; width: 1.2rem;"></span>
+                <span class="mdc-elevation--z4" style="background-color: green;border-radius: 50%;  margin-top: 1.3em; height: 1.2rem; width: 1.2rem;"></span>
 
                 <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
                     <input type="number" id="input-green-maximum-iteration" class="mdc-textfield__input" value="500" min="1">
@@ -165,7 +178,7 @@
                     <label class="mdc-textfield__label" for="input-blue-minimum-iteration">min</label>
                 </div>
 
-                <span class="mdc-elevation--z4" style="background-color: blue;border-radius: 50%;  margin-top: 36px; height: 1.2rem; width: 1.2rem;"></span>
+                <span class="mdc-elevation--z4" style="background-color: blue;border-radius: 50%;  margin-top: 1.3em; height: 1.2rem; width: 1.2rem;"></span>
 
                 <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
                     <input type="number" id="input-blue-maximum-iteration" class="mdc-textfield__input" value="50" min="1">
@@ -180,7 +193,7 @@
                     <label class="mdc-textfield__label" for="input-re-min">min</label>
                 </div>
 
-                <b style="margin-top: 36px;">Re</b>
+                <b style="margin-top: 1.3em;">Re</b>
 
                 <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
                     <input type="number" id="input-re-max" class="mdc-textfield__input" value="0.8">
@@ -192,7 +205,7 @@
                     <label class="mdc-textfield__label" for="input-im-min">min</label>
                 </div>
 
-                <b style="margin-top: 36px;">Im</b>
+                <b style="margin-top: 1.3em;">Im</b>
 
                 <div class="mdc-textfield" data-mdc-auto-init="MDCTextfield">
                     <input type="number" id="input-im-max"" class="mdc-textfield__input" value="1.2">
@@ -200,30 +213,40 @@
                 </div>
             </div>
 
-            <h3>Execution engine</h3>
+            <h3>Execution engine &amp; algo </h3>
             <div class="menu-item menu-item-switch">
-                <div>ASM.js</div>
+                <div><a href="https://en.wikipedia.org/wiki/Asm.js">ASM.js</a></div>
                 <div class="mdc-switch">
                   <input type="checkbox" id="input-engine" class="mdc-switch__native-control" />
                   <div class="mdc-switch__background">
                     <div class="mdc-switch__knob"></div>
                   </div>
                 </div>
-                <div id="webassembly">WebAssembly</div>
+                <div id="webassembly"><a href="https://en.wikipedia.org/wiki/WebAssembly">WebAssembly</a></div>
             </div>
 
             <i>using <b>8</b> web workers threads</i>
             
+            <div class="menu-item menu-item-switch">
+                <div><a href="https://en.wikipedia.org/wiki/Monte_Carlo_method">Monte Carlo</a></div>
+                <div class="mdc-switch">
+                  <input type="checkbox" id="input-algo" class="mdc-switch__native-control" />
+                  <div class="mdc-switch__background">
+                    <div class="mdc-switch__knob"></div>
+                  </div>
+                </div>
+                <div><a href="https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm">Metropolis-Hasting</a></div>
+            </div>
             
 
             <h3>Statistics</h3>
             <div class="menu-item menu-item-stats">
                 <div class="menu-item-stats-metric">samples</div> <div class="menu-item-stats-value">999</div>
-                <div class="menu-item-stats-metric">orbits < min</div> <div class="menu-item-stats-value">999</div>
-                <div class="menu-item-stats-metric">orbits > max </div> <div class="menu-item-stats-value">999</div>
-                <div class="menu-item-stats-metric">orbits</div> <div class="menu-item-stats-value">999</div>
-                <div class="menu-item-stats-metric">points</div> <div class="menu-item-stats-value">999</div>
-                <div class="menu-item-stats-metric">points in screen</div> <div class="menu-item-stats-value">999</div>
+                <div class="menu-item-stats-metric">orbits too small</div> <div class="menu-item-stats-value">999</div>
+                <div class="menu-item-stats-metric">orbits too big </div> <div class="menu-item-stats-value">999</div>
+                <div class="menu-item-stats-metric">valid orbits</div> <div class="menu-item-stats-value">999</div>
+                <div class="menu-item-stats-metric">orbit's points</div> <div class="menu-item-stats-value">999</div>
+                <div class="menu-item-stats-metric">orbit's points on screen</div> <div class="menu-item-stats-value">999</div>
 
             </div>
         </div>
