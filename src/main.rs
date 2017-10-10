@@ -13,15 +13,7 @@ pub fn get_buddhabrot(array:*mut u16, size_x: usize, size_y: usize, x_min:f32, x
     	*i = 0;
     }
 
-    let mut fitted_x_min: f32 = x_min;
-    let mut fitted_x_max: f32 = x_max;
-    let mut fitted_y_min: f32 = y_min;
-    let mut fitted_y_max: f32 = y_max;
-
-    //let screen_ratio = size_x as f32 / size_y as f32;
-    //fit_to_ratio(screen_ratio*(y_max-y_min)/(x_max-x_min), &mut fitted_x_min, &mut fitted_x_max, &mut fitted_y_min, &mut fitted_y_max).expect("failed to fit to screen ratio");
-
-    let max = gen_buddhabrot(size_x, size_y, fitted_x_min, fitted_x_max, fitted_y_min, fitted_y_max, min_iteration, max_iteration, num_sample, &mut image).expect("failed to gen buddhabrot");
+    let max = gen_buddhabrot(size_x, size_y, x_min, x_max, y_min, y_max, min_iteration, max_iteration, num_sample, &mut image).expect("failed to gen buddhabrot");
     return max;
 }
 
@@ -35,15 +27,7 @@ pub fn get_buddhabrot_metropolis(array:*mut u16, size_x: usize, size_y: usize, x
         *i = 0;
     }
 
-    let mut fitted_x_min: f64 = x_min;
-    let mut fitted_x_max: f64 = x_max;
-    let mut fitted_y_min: f64 = y_min;
-    let mut fitted_y_max: f64 = y_max;
-
-    //let screen_ratio = size_x as f64 / size_y as f64;
-    //fit_to_ratio(screen_ratio*(y_max-y_min)/(x_max-x_min), &mut fitted_x_min, &mut fitted_x_max, &mut fitted_y_min, &mut fitted_y_max).expect("failed to fit to screen ratio");
-
-    let max = gen_buddhabrot_metropolis(size_x, size_y, fitted_x_min, fitted_x_max, fitted_y_min, fitted_y_max, min_iteration, max_iteration, num_sample, &mut image).expect("failed to gen buddhabrot");
+    let max = gen_buddhabrot_metropolis(size_x, size_y, x_min, x_max, y_min, y_max, min_iteration, max_iteration, num_sample, &mut image).expect("failed to gen buddhabrot");
     return max;
 }
 
@@ -57,9 +41,6 @@ pub fn get_buddhabrot_color(array:*mut u16, size_x: usize, size_y: usize, x_min:
         *i = 0;
     }
 
-    //let screen_ratio = size_x as f64 / size_y as f64;
-    //fit_to_ratio(screen_ratio*(y_max-y_min)/(x_max-x_min), &mut fitted_x_min, &mut fitted_x_max, &mut fitted_y_min, &mut fitted_y_max).expect("failed to fit to screen ratio");
-
     gen_buddhabrot_color(size_x, size_y, x_min, x_max, y_min, y_max, red_min_iteration, red_max_iteration, green_min_iteration, green_max_iteration, blue_min_iteration, blue_max_iteration, num_sample, &mut image).expect("failed to gen buddhabrot");
 }
 
@@ -72,9 +53,6 @@ pub fn get_buddhabrot_metropolis_color(array:*mut u16, size_x: usize, size_y: us
     for i in image.iter_mut() {
         *i = 0;
     }
-
-    //let screen_ratio = size_x as f64 / size_y as f64;
-    //fit_to_ratio(screen_ratio*(y_max-y_min)/(x_max-x_min), &mut fitted_x_min, &mut fitted_x_max, &mut fitted_y_min, &mut fitted_y_max).expect("failed to fit to screen ratio");
 
     gen_buddhabrot_metropolis_color(size_x, size_y, x_min, x_max, y_min, y_max, red_min_iteration, red_max_iteration, green_min_iteration, green_max_iteration, blue_min_iteration, blue_max_iteration, num_sample, &mut image).expect("failed to gen buddhabrot");
 }
