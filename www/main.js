@@ -23,6 +23,7 @@ let inputReMax = document.getElementById('input-re-max');
 let inputImMin = document.getElementById('input-im-min');
 let inputImMax = document.getElementById('input-im-max');
 let inputEngine = document.getElementById('input-engine');
+let inputAlgo = document.getElementById('input-algo');
 let buttonPlayPause = document.getElementById('button-play-pause');
 
 function fit_to_ratio(ratio, i) {
@@ -102,7 +103,8 @@ function setupWorkers() {
             parseFloat(inputGreenMaximumIteration.value),
             parseFloat(inputBlueMinimumIteration.value),
             parseFloat(inputBlueMaximumIteration.value),
-            inputEngine.checked
+            inputEngine.checked,
+            inputAlgo.checked
             ]);
     }
 
@@ -136,6 +138,21 @@ function terminateWorkers() {
 }
 
 
+function updateParametersAndAlgo() {
+    if (Math.min(inputReMax.value - inputReMin.value, inputImMax.value - inputImMin.value) < 0.6 ) {
+        inputAlgo.checked = true;
+    } else {
+        inputAlgo.checked = false;
+    }
+    setupCanvas();
+    terminateWorkers();
+    terminateCompositor();
+    setupCompositor();
+    if (playing) {
+        setupWorkers();
+    }
+}
+
 function updateParameters() {
     setupCanvas();
     terminateWorkers();
@@ -153,11 +170,12 @@ inputGreenMinimumIteration.addEventListener('input', updateParameters);
 inputGreenMaximumIteration.addEventListener('input', updateParameters);
 inputBlueMinimumIteration.addEventListener('input', updateParameters);
 inputBlueMaximumIteration.addEventListener('input', updateParameters);
-inputReMin.addEventListener('input', updateParameters);
-inputReMax.addEventListener('input', updateParameters);
-inputImMin.addEventListener('input', updateParameters);
-inputImMax.addEventListener('input', updateParameters);
+inputReMin.addEventListener('input', updateParametersAndAlgo);
+inputReMax.addEventListener('input', updateParametersAndAlgo);
+inputImMin.addEventListener('input', updateParametersAndAlgo);
+inputImMax.addEventListener('input', updateParametersAndAlgo);
 inputEngine.addEventListener('change', updateParameters);
+inputAlgo.addEventListener('change', updateParameters);
 
 
 buttonPlayPause.addEventListener('click', function() {
@@ -246,18 +264,11 @@ document.addEventListener('mouseup', function(evt) {
             inputImMax.value = ny_max.toString();
         }
 
-
-        terminateWorkers();
-        terminateCompositor();
-        setupCanvas();
-        setupCompositor();
-        if (playing) {
-            setupWorkers();
-        }
-
         selecting = false;
         selection_rect.style.cursor = "zoom-in";
         canvas.style.cursor = "zoom-in";
+
+        updateParametersAndAlgo();
     }
     
 }, false);

@@ -10,6 +10,7 @@ let greenMaximumIteration;
 let blueMinimumIteration;
 let blueMaximumIteration;
 let view;
+let algo;
 
 var Module = {
     'wasmBinaryFile': "rustybrot.wasm",
@@ -34,15 +35,14 @@ function asmInitialized() {
 	let get_buddhabrot;
 	console.log("VIEWPORT: ",view);
 	
-	if (view.x_min < -1.0 && view.x_max > 0.5 && view.y_min < -0.5 && view.y_max > 0.5) {
-		get_buddhabrot = Module.cwrap('get_buddhabrot_color', 'number', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
-		console.log(name + ": asm initialized using standard MCMC");
-	} else {
+	if (algo) {
 		get_buddhabrot = Module.cwrap('get_buddhabrot_metropolis_color', 'number', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
 		console.log(name + ": asm initialized using Metropolis-Hasting MCMC");
+	} else {
+		get_buddhabrot = Module.cwrap('get_buddhabrot_color', 'number', ['number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number']);
+		console.log(name + ": asm initialized using standard MCMC");
 	}
-	
-	
+
 
 	let num_sample = 10000;
 	const duration_goal = 5000;
@@ -83,7 +83,7 @@ onmessage = function(event) {
 	[name, size_x, size_y, view,
 			redMinimumIteration, redMaximumIteration,
 			greenMinimumIteration, greenMaximumIteration,
-			blueMinimumIteration, blueMaximumIteration, wasm] = event.data;
+			blueMinimumIteration, blueMaximumIteration, wasm, algo] = event.data;
 
 	console.log(name + ": size=" + size_x + "x" + size_y + ", view=" + view);
 
