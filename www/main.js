@@ -33,6 +33,8 @@ let statValidOrbits = document.getElementById('stat-valid-orbits');
 let statOrbitsPoints = document.getElementById('stat-orbits-points');
 let statOrbitsPointsOnScreen = document.getElementById('stat-orbits-points-on-screen');
 
+
+
 function fit_to_ratio(ratio, i) {
     let view_ratio = (i.x_max - i.x_min) / (i.y_max - i.y_min);
     let o = {};
@@ -312,6 +314,7 @@ function syncParamsFromURL() {
 
 window.onload = function() {
     syncParamsFromURL();
+    document.getElementById("nb-web-workers").innerText = ncore;
 
     window.onresize = function(event) {
         console.log("resize event");
