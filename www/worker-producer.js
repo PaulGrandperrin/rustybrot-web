@@ -45,7 +45,7 @@ function asmInitialized() {
 
 
 	let num_sample = 100000;
-	const duration_goal = 10000;
+	const duration_goal = 4000;
 	const zoom = 0.005;
 
 	while(true) {

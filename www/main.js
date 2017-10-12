@@ -33,7 +33,23 @@ let statValidOrbits = document.getElementById('stat-valid-orbits');
 let statOrbitsPoints = document.getElementById('stat-orbits-points');
 let statOrbitsPointsOnScreen = document.getElementById('stat-orbits-points-on-screen');
 
+let statSamplesPerS = document.getElementById('stat-samples-s');
+let statOrbitsTooSmallPerS = document.getElementById('stat-orbits-too-small-s');
+let statOrbitsTooBigPerS = document.getElementById('stat-orbits-too-big-s');
+let statValidOrbitsPerS = document.getElementById('stat-valid-orbits-s');
+let statOrbitsPointsPerS = document.getElementById('stat-orbits-points-s');
+let statOrbitsPointsOnScreenPerS = document.getElementById('stat-orbits-points-on-screen-s');
 
+let time_since_play;
+let time_since_pause;
+let duration_pause = 0;
+
+function human_readable(bytes) {
+    var sizes = ['', 'K', 'M', 'G', 'T', 'P'];
+    if (bytes == 0) return '0';
+    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1000)));
+    return Math.round(bytes / Math.pow(1000, i)*10, 3)/10 + sizes[i];
+};
 
 function fit_to_ratio(ratio, i) {
     let view_ratio = (i.x_max - i.x_min) / (i.y_max - i.y_min);
@@ -89,6 +105,15 @@ function setupCompositor() {
 
 }
 
+var global_stats = {
+    samples: 0,
+    orbits_too_small: 0,
+    orbits_too_big: 0,
+    valid_orbits: 0,
+    orbits_points: 0,
+    orbits_points_on_screen: 0,
+};
+
 function setupWorkers() {
     console.log("setting up workers");
     const size_x = canvas.clientWidth;
@@ -98,12 +123,28 @@ function setupWorkers() {
         const [name, workerResultBuffer, stats] = event.data;
         console.log("received data from " + name);
         console.log("STATS: ", stats);
-        statSamples.innerText = parseFloat(statSamples.innerText) + stats.samples;
-        statOrbitsTooSmall.innerText = parseFloat(statOrbitsTooSmall.innerText) + stats.orbits_too_small;
-        statOrbitsTooBig.innerText = parseFloat(statOrbitsTooBig.innerText) + stats.orbits_too_big;
-        statValidOrbits.innerText = parseFloat(statValidOrbits.innerText) + stats.valid_orbits;
-        statOrbitsPoints.innerText = parseFloat(statOrbitsPoints.innerText) + stats.orbits_points;
-        statOrbitsPointsOnScreen.innerText = parseFloat(statOrbitsPointsOnScreen.innerText) + stats.orbits_points_on_screen;
+        global_stats.samples += stats.samples;
+        global_stats.orbits_too_small += stats.orbits_too_small;
+        global_stats.orbits_too_big += stats.orbits_too_big;
+        global_stats.valid_orbits += stats.valid_orbits;
+        global_stats.orbits_points += stats.orbits_points;
+        global_stats.orbits_points_on_screen += stats.orbits_points_on_screen;
+
+        statSamples.innerText = human_readable(global_stats.samples);
+        statOrbitsTooSmall.innerText = human_readable(global_stats.orbits_too_small);
+        statOrbitsTooBig.innerText = human_readable(global_stats.orbits_too_big);
+        statValidOrbits.innerText = human_readable(global_stats.valid_orbits);
+        statOrbitsPoints.innerText = human_readable(global_stats.orbits_points);
+        statOrbitsPointsOnScreen.innerText = human_readable(global_stats.orbits_points_on_screen);
+
+        let duration = performance.now() - time_since_play - duration_pause;
+
+        statSamplesPerS.innerText = human_readable(global_stats.samples / duration) + '/s';
+        statOrbitsTooSmallPerS.innerText = human_readable(global_stats.orbits_too_small / duration) + '/s';
+        statOrbitsTooBigPerS.innerText = human_readable(global_stats.orbits_too_big / duration) + '/s';
+        statValidOrbitsPerS.innerText = human_readable(global_stats.valid_orbits / duration) + '/s';
+        statOrbitsPointsPerS.innerText = human_readable(global_stats.orbits_points / duration) + '/s';
+        statOrbitsPointsOnScreenPerS.innerText = human_readable(global_stats.orbits_points_on_screen / duration) + '/s';
 
         worker_compositor.postMessage(['compose', workerResultBuffer], [workerResultBuffer]);
     };
@@ -166,12 +207,26 @@ function updateParametersAndAlgo(changeHistory = true) {
 }
 
 function updateParameters(changeHistory = true) {
-    statSamples.innerText = 0.0;
-    statOrbitsTooSmall.innerText = 0.0;
-    statOrbitsTooBig.innerText = 0.0;
-    statValidOrbits.innerText = 0.0;
-    statOrbitsPoints.innerText = 0.0;
-    statOrbitsPointsOnScreen.innerText = 0.0;
+    statSamples.innerText = 0;
+    statOrbitsTooSmall.innerText = 0;
+    statOrbitsTooBig.innerText = 0;
+    statValidOrbits.innerText = 0;
+    statOrbitsPoints.innerText = 0;
+    statOrbitsPointsOnScreen.innerText = 0;
+    statSamplesPerS.innerText = '0/s';
+    statOrbitsTooSmallPerS.innerText = '0/s';
+    statOrbitsTooBigPerS.innerText = '0/s';
+    statValidOrbitsPerS.innerText = '0/s';
+    statOrbitsPointsPerS.innerText = '0/s';
+    statOrbitsPointsOnScreenPerS.innerText = '0/s';
+    global_stats = {
+        samples: 0,
+        orbits_too_small: 0,
+        orbits_too_big: 0,
+        valid_orbits: 0,
+        orbits_points: 0,
+        orbits_points_on_screen: 0,
+    };
 
     if (changeHistory) {
         history.pushState({}, "", `?red.min=${inputRedMinimumIteration.value}&red.max=${inputRedMaximumIteration.value}&green.min=${inputGreenMinimumIteration.value}&green.max=${inputGreenMaximumIteration.value}&blue.min=${inputBlueMinimumIteration.value}&blue.max=${inputBlueMaximumIteration.value}&re.min=${inputReMin.value}&re.max=${inputReMax.value}&im.min=${inputImMin.value}&im.max=${inputImMax.value}`);
@@ -184,6 +239,10 @@ function updateParameters(changeHistory = true) {
     if (playing) {
         setupWorkers();
     }
+
+    time_since_play = performance.now();
+    duration_pause = 0;
+
 } 
 
 
@@ -205,8 +264,10 @@ buttonPlayPause.addEventListener('click', function() {
     let icon = buttonPlayPause.getElementsByTagName("span")[0];
     if (playing) {
         terminateWorkers();
+        time_since_pause = performance.now();
     } else {
         setupWorkers();
+        duration_pause += performance.now() - time_since_pause;
     }
     playing = !playing;
     if (playing) {
@@ -319,13 +380,7 @@ window.onload = function() {
     window.onresize = function(event) {
         console.log("resize event");
 
-        terminateWorkers();
-        terminateCompositor();
-        setupCanvas();
-        setupCompositor();
-        if (playing) {
-            setupWorkers();
-        }
+        updateParameters(false);
     };
 
     if (typeof WebAssembly !== "object") {

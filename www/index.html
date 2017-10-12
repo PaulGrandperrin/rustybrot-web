@@ -51,7 +51,7 @@
 
              .menu-item-stats {
                 display: grid;
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 4fr 1fr 1fr;
                 /*grid-template-rows: ;*/
                 grid-column-gap: 2rem;
             }
@@ -241,12 +241,30 @@
 
             <h3>Statistics</h3>
             <div class="menu-item menu-item-stats">
-                <div class="menu-item-stats-metric">samples</div> <div class="menu-item-stats-value" id="stat-samples">0.0</div>
-                <div class="menu-item-stats-metric">orbits too small</div> <div class="menu-item-stats-value" id="stat-orbits-too-small">0.0</div>
-                <div class="menu-item-stats-metric">orbits too big </div> <div class="menu-item-stats-value" id="stat-orbits-too-big">0.0</div>
-                <div class="menu-item-stats-metric">valid orbits</div> <div class="menu-item-stats-value" id="stat-valid-orbits">0.0</div>
-                <div class="menu-item-stats-metric">orbit's points</div> <div class="menu-item-stats-value" id="stat-orbits-points">0.0</div>
-                <div class="menu-item-stats-metric">orbit's points on screen</div> <div class="menu-item-stats-value" id="stat-orbits-points-on-screen">0.0</div>
+                <div class="menu-item-stats-metric">samples</div>
+                <div class="menu-item-stats-value" id="stat-samples">0</div>
+                <div class="menu-item-stats-value" id="stat-samples-s">0/s</div>
+                
+                <div class="menu-item-stats-metric">orbits too small</div>
+                <div class="menu-item-stats-value" id="stat-orbits-too-small">0</div>
+                <div class="menu-item-stats-value" id="stat-orbits-too-small-s">0/s</div>
+                
+                <div class="menu-item-stats-metric">orbits too big </div>
+                <div class="menu-item-stats-value" id="stat-orbits-too-big">0</div>
+                <div class="menu-item-stats-value" id="stat-orbits-too-big-s">0/s</div>
+                
+                <div class="menu-item-stats-metric">valid orbits</div>
+                <div class="menu-item-stats-value" id="stat-valid-orbits">0</div>
+                <div class="menu-item-stats-value" id="stat-valid-orbits-s">0/s</div>
+                
+                <div class="menu-item-stats-metric">orbit's points</div>
+                <div class="menu-item-stats-value" id="stat-orbits-points">0</div>
+                <div class="menu-item-stats-value" id="stat-orbits-points-s">0/s</div>
+                
+                <div class="menu-item-stats-metric">orbit's points on screen</div>
+                <div class="menu-item-stats-value" id="stat-orbits-points-on-screen">0</div>
+                <div class="menu-item-stats-value" id="stat-orbits-points-on-screen-s">0/s</div>
+
 
             </div>
         </div>
