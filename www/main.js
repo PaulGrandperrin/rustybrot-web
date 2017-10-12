@@ -280,7 +280,7 @@ buttonPlayPause.addEventListener('click', function() {
 });
 
 buttonReset.addEventListener('click', function() {
-    history.pushState({}, "", "");
+    history.pushState({}, "", "/");
     inputReMin.value = -1.6;
     inputReMax.value = 0.8;
     inputImMin.value = -1.2;
