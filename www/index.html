@@ -26,7 +26,7 @@
                 overflow-y: hidden;
                 display: grid;
                 /* grid-template-columns: minmax(calc(20vw - 25rem), auto) minmax(20rem, 20vw); */
-                grid-template-columns: auto 20vw;
+                grid-template-columns: auto 24rem;
                 grid-template-rows: 100vh;
                 grid-column-gap: 0;
                 margin: 0;
@@ -52,18 +52,12 @@
 
              .menu-item-stats {
                 display: grid;
-                grid-template-columns: 4fr 1fr 1fr;
+                grid-template-columns: 10rem 1fr 1fr;
                 /*grid-template-rows: ;*/
                 grid-column-gap: 2rem;
-            }
-
-            .menu-item-stats-metric {
                 text-align: right;
             }
 
-            .menu-item-stats-value {
-                text-align: left;
-            }
 
             #canvas {
                 width: 100%;
@@ -77,15 +71,6 @@
                 padding: 20px;
             }
             
-            @media (orientation: portrait){
-                body {
-                    grid-template-columns: 100vw 15rem;
-                }
-                #canvas {
-                    position: fixed;
-                    z-index: -1;
-                }
-            }
 
             #selection-rect {
                 background-color: rgba(255,255,255,0.2);
@@ -105,7 +90,7 @@
 
             #buttons {
                 position: absolute;
-                right:21vw;
+                right:25rem;
                 bottom: 1vh;
                 text-align: center;
             }
@@ -119,6 +104,18 @@
                 margin: 0;
             }
 
+            @media (orientation: portrait){
+                body {
+                    grid-template-columns: 100vw 15rem;
+                }
+                #canvas {
+                    position: fixed;
+                    z-index: -1;
+                }
+                #buttons {
+                right:1rem;
+                }
+            }
 
 
         </style>
