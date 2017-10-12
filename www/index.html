@@ -25,7 +25,8 @@
             body {
                 overflow-y: hidden;
                 display: grid;
-                grid-template-columns: minmax(calc(20vw - 25rem), auto) minmax(20rem, 20vw);
+                /* grid-template-columns: minmax(calc(20vw - 25rem), auto) minmax(20rem, 20vw); */
+                grid-template-columns: auto 20vw;
                 grid-template-rows: 100vh;
                 grid-column-gap: 0;
                 margin: 0;
@@ -102,11 +103,17 @@
                 background-color: white;
             }
 
-            #button-play-pause {
+            #buttons {
                 position: absolute;
-                right:30px;
-                bottom: 30px;
+                right:21vw;
+                bottom: 1vh;
+                text-align: center;
             }
+
+            .mdc-fab {
+                margin: 0.5rem;
+            }
+
 
             .mdc-textfield--upgraded:not(.mdc-textfield--fullwidth):not(.mdc-textfield--box) {
                 margin: 0;
@@ -280,11 +287,21 @@
   </div>
 </div>
 
+    <div id="buttons">
+    <button id="button-reset" class="mdc-fab mdc-fab--mini material-icons" aria-label="Reset" data-mdc-auto-init="MDCRipple">
+      <span class="mdc-fab__icon">
+        replay
+      </span>
+    </button>
+
+    <br/>
+
     <button id="button-play-pause" class="mdc-fab material-icons" aria-label="Play/Pause" data-mdc-auto-init="MDCRipple">
       <span class="mdc-fab__icon">
         pause
       </span>
     </button>
+</div>
 
 <a href="https://github.com/PaulGrandperrin/rustybrot-web"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/c6286ade715e9bea433b4705870de482a654f78a/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f77686974655f6666666666662e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_white_ffffff.png"></a>
  

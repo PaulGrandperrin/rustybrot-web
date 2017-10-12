@@ -25,6 +25,8 @@ let inputImMax = document.getElementById('input-im-max');
 let inputEngine = document.getElementById('input-engine');
 let inputAlgo = document.getElementById('input-algo');
 let buttonPlayPause = document.getElementById('button-play-pause');
+let buttonReset = document.getElementById('button-reset');
+
 
 let statSamples = document.getElementById('stat-samples');
 let statOrbitsTooSmall = document.getElementById('stat-orbits-too-small');
@@ -275,6 +277,22 @@ buttonPlayPause.addEventListener('click', function() {
     } else {
         icon.innerText="play_arrow";
     }
+});
+
+buttonReset.addEventListener('click', function() {
+    history.pushState({}, "", "");
+    inputReMin.value = -1.6;
+    inputReMax.value = 0.8;
+    inputImMin.value = -1.2;
+    inputImMax.value = 1.2;
+
+    inputRedMinimumIteration.value =  1;
+    inputRedMaximumIteration.value =  5000;
+    inputGreenMinimumIteration.value =  1;
+    inputGreenMaximumIteration.value =  500;
+    inputBlueMinimumIteration.value =  1;
+    inputBlueMaximumIteration.value =  50;
+    updateParametersAndAlgo(false);
 });
 
 
