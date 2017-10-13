@@ -286,12 +286,12 @@ buttonReset.addEventListener('click', function() {
     inputImMin.value = -1.2;
     inputImMax.value = 1.2;
 
-    inputRedMinimumIteration.value =  1;
+    inputRedMinimumIteration.value =  200;
     inputRedMaximumIteration.value =  5000;
-    inputGreenMinimumIteration.value =  1;
+    inputGreenMinimumIteration.value =  50;
     inputGreenMaximumIteration.value =  500;
     inputBlueMinimumIteration.value =  1;
-    inputBlueMaximumIteration.value =  50;
+    inputBlueMaximumIteration.value =  100;
     updateParametersAndAlgo(false);
 });
 
