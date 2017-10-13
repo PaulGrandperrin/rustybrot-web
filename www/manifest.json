@@ -1,0 +1,16 @@
+{
+  "name": "Buddhabrot Explorer",
+  "short_name": "Buddhabrot Explorer",
+  "description": "Buddhabrot explorer written in Rust using WebAssembly",
+  "icons": [
+    {
+      "src": "icon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "black",
+  "theme_color": "black",
+}
