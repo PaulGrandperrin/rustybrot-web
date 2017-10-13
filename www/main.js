@@ -331,8 +331,7 @@ document.addEventListener('mousemove', function(evt) {
     }
 }, false);
 
-document.addEventListener('mouseup', function(evt) {
-    
+document.addEventListener('mouseup', function(evt) { 
     if (selecting) {
         selection_rect.style.display = "none";
         var mousePos = getMousePos(canvas, evt);
@@ -375,6 +374,7 @@ document.addEventListener('mouseup', function(evt) {
     
 }, false);
 
+
 function syncParamsFromURL() {
     const searchParams = new URLSearchParams(window.location.search);
     inputReMin.value = searchParams.get("re.min") || -1.6;
@@ -390,6 +390,35 @@ function syncParamsFromURL() {
     inputBlueMaximumIteration.value = searchParams.get("blue.max") || 100;
     updateParametersAndAlgo(false);
 }
+
+var touch_timeout;
+var last_tap = 0;
+canvas.addEventListener('touchend', function(event) {
+    var currentTime = new Date().getTime();
+    var tapLength = currentTime - last_tap;
+    clearTimeout(touch_timeout);
+    if (tapLength < 500 && tapLength > 0) {
+        view = fit_to_ratio(canvas.height/canvas.width, {x_min:parseFloat(inputReMin.value), x_max:parseFloat(inputReMax.value), y_min:parseFloat(inputImMin.value), y_max:parseFloat(inputImMax.value)});
+        let mousePos = {x: event.changedTouches[0].clientX, y: event.changedTouches[0].clientY};
+
+        const mx = (mousePos.y / canvas.height) * (view.x_max - view.x_min) + view.x_min;
+        const my = (mousePos.x / canvas.width) * (view.y_max - view.y_min) + view.y_min;
+            inputReMin.value = mx - (parseFloat(inputReMax.value) - parseFloat(inputReMin.value))/4.0;
+            inputReMax.value = mx + (parseFloat(inputReMax.value) - parseFloat(inputReMin.value))/4.0;
+            inputImMin.value = my - (parseFloat(inputImMax.value) - parseFloat(inputImMin.value))/4.0;
+            inputImMax.value = my + (parseFloat(inputImMax.value) - parseFloat(inputImMin.value))/4.0;
+        updateParametersAndAlgo();
+
+
+        event.preventDefault();
+    } else {
+        touch_timeout = setTimeout(function() {
+            clearTimeout(touch_timeout);
+        }, 500);
+    }
+    last_tap = currentTime;
+});
+
 
 window.onload = function() {
     syncParamsFromURL();
