@@ -1,4 +1,4 @@
-var CACHE_NAME = 'buddhabrot-2017-10-12-1';
+var CACHE_NAME = 'buddhabrot-2017-10-12-2';
 var urlsToCache = [
   '.',
   '/',
@@ -41,7 +41,7 @@ self.addEventListener('fetch', function(event) {
 });
 
 this.addEventListener('activate', function(event) {
-  var cacheWhitelist = ['buddhabrot-2017-10-12-1'];
+  var cacheWhitelist = ['buddhabrot-2017-10-12-2'];
 
   event.waitUntil(
     caches.keys().then(function(keyList) {
