@@ -421,6 +421,13 @@ canvas.addEventListener('touchend', function(event) {
 
 
 window.onload = function() {
+    if (typeof WebAssembly !== "object") {
+        inputEngine.disabled = true;
+        document.getElementById("webassembly").style.textDecoration= "line-through";
+    } else {
+        inputEngine.checked = true;
+    }
+
     syncParamsFromURL();
     document.getElementById("nb-web-workers").innerText = ncore;
 
@@ -430,18 +437,12 @@ window.onload = function() {
         updateParameters(false);
     };
 
-    if (typeof WebAssembly !== "object") {
-        inputEngine.disabled = true;
-        document.getElementById("webassembly").style.textDecoration= "line-through";
-    } else {
-        inputEngine.checked = true;
-    }
 
     var MDCSnackbar = window.mdc.snackbar.MDCSnackbar;
     const snackbar = new MDCSnackbar(document.querySelector('.mdc-snackbar'));
     const dataObj = 
         {
-          message: typeof WebAssembly === "object" ? "WebAssembly supported 😄" : "WebAssembly not supported, fallbacking to ASM.js",
+          message: !inputEngine.disabled ? "WebAssembly supported 😄" : "WebAssembly not supported, fallbacking to ASM.js",
           actionText: 'Ok',
           actionHandler: function () {},
           timeout: 5000
