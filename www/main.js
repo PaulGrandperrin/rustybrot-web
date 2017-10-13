@@ -382,12 +382,12 @@ function syncParamsFromURL() {
     inputImMin.value = searchParams.get("im.min") || -1.2;
     inputImMax.value = searchParams.get("im.max") || 1.2;
 
-    inputRedMinimumIteration.value = searchParams.get("red.min") || 1;
+    inputRedMinimumIteration.value = searchParams.get("red.min") || 200;
     inputRedMaximumIteration.value = searchParams.get("red.max") || 5000;
-    inputGreenMinimumIteration.value = searchParams.get("green.min") || 1;
+    inputGreenMinimumIteration.value = searchParams.get("green.min") || 50;
     inputGreenMaximumIteration.value = searchParams.get("green.max") || 500;
     inputBlueMinimumIteration.value = searchParams.get("blue.min") || 1;
-    inputBlueMaximumIteration.value = searchParams.get("blue.max") || 50;
+    inputBlueMaximumIteration.value = searchParams.get("blue.max") || 100;
     updateParametersAndAlgo(false);
 }
 
